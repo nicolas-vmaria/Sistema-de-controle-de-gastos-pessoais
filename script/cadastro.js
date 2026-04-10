@@ -50,7 +50,11 @@ function cadastrar(e){
         senha: senhaIn.value
     }
 
-    localStorage.setItem('user', JSON.stringify(newUser))
+    
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]')
+    users.push(newUser)
+    localStorage.setItem('users', JSON.stringify(users))
     showToast('Conta criada com sucesso!', 'success')
 
     window.location.href = '../pages/gerenciamentoDados.html'
