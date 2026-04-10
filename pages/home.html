@@ -1,18 +1,336 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style/home.css">
-    <title>Home - Organized.</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>organized. — gestão de gastos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../style/home.css">
 </head>
 
 <body>
-    <nav>
-        <img src="/assets/Logo off-white.png" alt="">
-        <a href="/pages/login.html">Login</a>
-    </nav>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">organized.</div>
+    <ul class="nav-links">
+      <li><a href="#features">Funcionalidades</a></li>
+      <li><a href="#investimentos">Investimentos</a></li>
+      <li><a href="#depoimentos">Depoimentos</a></li>
+    </ul>
+    <a href="../pages/cadastro.html" class="nav-cta">Começar</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" style="max-width:100%; padding-top: 140px;">
+    <div class="hero-bg-circle"></div>
+
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Novo — Dicas de Investimento
+    </div>
+
+    <h1>Seus gastos,<br><em>finalmente</em><br>no lugar.</h1>
+    <p>Controle suas finanças com clareza. Categorize despesas, acompanhe metas e tome decisões melhores com o
+      organized.</p>
+
+    <div class="hero-actions">
+      <a href="../pages/cadastro.html" class="btn-primary">Criar conta grátis</a>
+      <a href="#features" class="btn-secondary">Ver funcionalidades</a>
+    </div>
+
+    <!-- DASHBOARD MOCKUP -->
+    <div class="hero-dashboard">
+      <div class="dashboard-card">
+        <div class="dash-header">
+          <span class="dash-title">Visão Geral — Abril 2025</span>
+          <span class="dash-period">Este mês ↓</span>
+        </div>
+
+        <div class="dash-stats">
+          <div class="stat-box">
+            <div class="stat-label">Receita</div>
+            <div class="stat-value positive">R$ 8.400</div>
+            <div class="stat-change">↑ 12% vs. mês anterior</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Gastos</div>
+            <div class="stat-value negative">R$ 3.210</div>
+            <div class="stat-change">↓ 8% vs. mês anterior</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Saldo</div>
+            <div class="stat-value">R$ 5.190</div>
+            <div class="stat-change">→ Meta: R$ 6.000</div>
+          </div>
+        </div>
+
+        <div class="chart-area">
+          <div class="bar" style="height:40%"></div>
+          <div class="bar" style="height:60%"></div>
+          <div class="bar" style="height:45%"></div>
+          <div class="bar" style="height:75%"></div>
+          <div class="bar" style="height:55%"></div>
+          <div class="bar" style="height:85%"></div>
+          <div class="bar" style="height:65%"></div>
+          <div class="bar" style="height:90%"></div>
+          <div class="bar active" style="height:78%"></div>
+          <div class="bar" style="height:50%"></div>
+          <div class="bar" style="height:35%"></div>
+          <div class="bar" style="height:20%"></div>
+        </div>
+
+        <div class="transactions">
+          <div class="tx-row">
+            <div class="tx-left">
+              <div class="tx-icon">🛒</div>
+              <div>
+                <div class="tx-name">Supermercado Extra</div>
+                <div class="tx-cat">Alimentação · hoje</div>
+              </div>
+            </div>
+            <div class="tx-amount">− R$ 342,50</div>
+          </div>
+          <div class="tx-row">
+            <div class="tx-left">
+              <div class="tx-icon">💼</div>
+              <div>
+                <div class="tx-name">Salário</div>
+                <div class="tx-cat">Receita · 05 abr</div>
+              </div>
+            </div>
+            <div class="tx-amount income">+ R$ 8.400,00</div>
+          </div>
+          <div class="tx-row">
+            <div class="tx-left">
+              <div class="tx-icon">🏠</div>
+              <div>
+                <div class="tx-name">Aluguel</div>
+                <div class="tx-cat">Moradia · 01 abr</div>
+              </div>
+            </div>
+            <div class="tx-amount">− R$ 1.800,00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-section">
+    <div class="marquee-track">
+      <span class="marquee-item">Controle total <span>·</span></span>
+      <span class="marquee-item">Metas financeiras <span>·</span></span>
+      <span class="marquee-item">Relatórios automáticos <span>·</span></span>
+      <span class="marquee-item">Categorização inteligente <span>·</span></span>
+      <span class="marquee-item">Alertas de gastos <span>·</span></span>
+      <span class="marquee-item">Multi-bancos <span>·</span></span>
+      <span class="marquee-item">Controle total <span>·</span></span>
+      <span class="marquee-item">Metas financeiras <span>·</span></span>
+      <span class="marquee-item">Relatórios automáticos <span>·</span></span>
+      <span class="marquee-item">Categorização inteligente <span>·</span></span>
+      <span class="marquee-item">Alertas de gastos <span>·</span></span>
+      <span class="marquee-item">Multi-bancos <span>·</span></span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="reveal">
+      <div class="section-label">Funcionalidades</div>
+      <div class="section-title">Tudo que você precisa<br>para organizar.</div>
+    </div>
+
+    <div class="features-grid reveal">
+      <div class="feature-item">
+        <div class="feature-num">01</div>
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Dashboard em tempo real</div>
+        <div class="feature-desc">Visualize todos os seus gastos e receitas em um painel único e intuitivo. Atualização
+          automática a cada transação.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">02</div>
+        <div class="feature-icon">🏷️</div>
+        <div class="feature-title">Categorização rápida</div>
+        <div class="feature-desc">Categorize suas transações de forma simples e rápida. Menos trabalho manual, mais
+          clareza sobre onde seu dinheiro vai.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">03</div>
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Metas e orçamentos</div>
+        <div class="feature-desc">Defina limites por categoria e acompanhe seu progresso. Receba alertas antes de
+          estourar o orçamento.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">04</div>
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Relatórios mensais</div>
+        <div class="feature-desc">Relatórios detalhados gerados automaticamente todo mês. Entenda padrões de consumo e
+          tome decisões melhores.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- INVESTMENT TIPS -->
+  <section id="investimentos">
+    <div class="reveal">
+      <div class="section-label">Dicas de Investimento</div>
+      <div class="section-title">Seu dinheiro<br>trabalhando por você.</div>
+    </div>
+
+    <div class="reveal" style="margin-top:20px;">
+      <p style="font-size:17px; color: var(--cream-mid); max-width: 560px; line-height:1.8;">Organizar os gastos é o
+        primeiro passo. O segundo é fazer o dinheiro que sobra crescer. Aqui vão algumas dicas para começar.</p>
+    </div>
+
+    <div class="tips-grid reveal">
+      <div class="tip-card">
+        <div class="tip-number">01</div>
+        <div class="tip-icon">🏦</div>
+        <div class="tip-title">Reserva de emergência primeiro</div>
+        <div class="tip-body">Antes de qualquer investimento, tenha de 3 a 6 meses de despesas guardados em um lugar
+          seguro e de fácil acesso, como o Tesouro Selic ou um CDB com liquidez diária. Isso é a base de tudo.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-number">02</div>
+        <div class="tip-icon">📈</div>
+        <div class="tip-title">Comece pelo Tesouro Direto</div>
+        <div class="tip-body">O Tesouro Direto é uma das formas mais seguras de investir no Brasil. Com valores a partir
+          de R$ 30, você empresta dinheiro ao governo e recebe juros em troca. Ideal para quem está começando.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-number">03</div>
+        <div class="tip-icon">🔄</div>
+        <div class="tip-title">Invista todo mês, sem falta</div>
+        <div class="tip-body">A consistência bate o timing. Investir um valor fixo todo mês — mesmo que pequeno — é mais
+          eficiente do que tentar achar o momento certo. Os juros compostos fazem o trabalho ao longo do tempo.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-number">04</div>
+        <div class="tip-icon">🧺</div>
+        <div class="tip-title">Diversifique sua carteira</div>
+        <div class="tip-body">Não coloque todo o dinheiro em um único investimento. Misture renda fixa (segurança) com
+          renda variável (crescimento). Uma carteira equilibrada reduz riscos e aumenta as chances de bons retornos.
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-number">05</div>
+        <div class="tip-icon">🧾</div>
+        <div class="tip-title">Atenção ao imposto de renda</div>
+        <div class="tip-body">Cada investimento tem uma regra tributária diferente. CDB, fundos e ações seguem tabelas
+          distintas. Conhecer o IR e o IOF evita surpresas e ajuda a escolher melhor onde colocar seu dinheiro.</div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-number">06</div>
+        <div class="tip-icon">🎯</div>
+        <div class="tip-title">Invista com objetivos claros</div>
+        <div class="tip-body">Guardar para uma viagem em 1 ano é diferente de guardar para aposentadoria em 30. Defina
+          seus objetivos e escolha investimentos com prazo e risco compatíveis com cada meta.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- TESTIMONIALS -->
+  <section id="depoimentos">
+    <div class="reveal">
+      <div class="section-label">Depoimentos</div>
+      <div class="section-title">Quem já se<br>organizou.</div>
+    </div>
+
+    <div class="testimonials-grid reveal">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-quote">"Finalmente entendo onde meu salário vai. Em 3 meses usando o organized. consegui
+          juntar o que não conseguia em um ano."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">M</div>
+          <div>
+            <div class="author-name">Mariana Costa</div>
+            <div class="author-role">Designer · São Paulo</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-quote">"A categorização rápida mudou tudo. Não preciso mais ficar classificando gasto
+          por gasto. Economizo tempo e dinheiro."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">R</div>
+          <div>
+            <div class="author-name">Rafael Mendes</div>
+            <div class="author-role">Dev · Curitiba</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-quote">"Uso para controlar as finanças da minha empresa pequena. Os relatórios mensais
+          são um diferencial enorme na tomada de decisão."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">A</div>
+          <div>
+            <div class="author-name">Ana Lima</div>
+            <div class="author-role">Empreendedora · BH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <div class="cta-section reveal">
+    <h2>Comece a ser<br><em
+        style="font-style:normal; -webkit-text-stroke: 1.5px rgba(254,253,234,0.4); color:transparent">organized.</em><br>hoje.
+    </h2>
+    <p>Sem cartão de crédito. Sem burocracia. Configure em menos de 2 minutos.</p>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">organized.</div>
+    <ul class="footer-links">
+      <li><a href="#">Privacidade</a></li>
+      <li><a href="#">Termos</a></li>
+      <li><a href="#">Contato</a></li>
+      <li><a href="#">Blog</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 organized.</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // Animate bars on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const bars = document.querySelectorAll('.bar');
+      bars.forEach((bar, i) => {
+        const h = bar.style.height;
+        bar.style.height = '4px';
+        setTimeout(() => {
+          bar.style.height = h;
+        }, 800 + i * 60);
+      });
+    });
+  </script>
 </body>
 
 </html>
