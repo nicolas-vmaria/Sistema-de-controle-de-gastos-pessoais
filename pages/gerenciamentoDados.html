@@ -12,17 +12,25 @@
     <h1>Bem-vindo(a) a sua pagina de Gerenciamento De Dados</h1>
 
     <p>Adicione o seu saldo e seus gastos aqui mesmo!</p>
+
+    <h1>Seu saldo: <span id="saldo">R$ 0,00</span></h1>
     
-        <input type="text" id="valor" placeholder="Digite aqui o seu salario ">
+    <input type="text" id="valor" placeholder="Digite aqui o seu salario ">
+    <input type="text" id="inputGastos" placeholder="Digite seus gastos aqui">
+    <input type="date" id="dataGastos" placeholder="Digite a data do gasto">
+    <button id="gasto">Enviar Gasto</button>
 
-        <button id="enviar">Enviar</button>
+    <div id="gastos-container">
+        <h2>Exibindo Gastos</h2>
+
+        <ul id="listaGastos">
+            
+        </ul>
+    </div>
+
+    <button id="enviar">Enviar Saldo</button>
    
-    <button id="gastos">Adicione os seus gastos</button>
 
-    <button id="mostrar">Mostrar Saldo</button>
-
-    <h2 id="mostrarsalario"></h2>
-    <h2 id="saldoAtualizado"></h2>
 
 </body>
 
