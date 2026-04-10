@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>organized. — gestão de gastos</title>
+  <title>Home - organized.</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="../style/home.css">
@@ -305,32 +305,7 @@
     </ul>
     <div class="footer-copy">© 2026 organized.</div>
   </footer>
-
-  <script>
-    // Scroll reveal
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-
-    reveals.forEach(el => observer.observe(el));
-
-    // Animate bars on load
-    document.addEventListener('DOMContentLoaded', () => {
-      const bars = document.querySelectorAll('.bar');
-      bars.forEach((bar, i) => {
-        const h = bar.style.height;
-        bar.style.height = '4px';
-        setTimeout(() => {
-          bar.style.height = h;
-        }, 800 + i * 60);
-      });
-    });
-  </script>
+  <script src="../script/home.js"></script>
 </body>
 
 </html>
