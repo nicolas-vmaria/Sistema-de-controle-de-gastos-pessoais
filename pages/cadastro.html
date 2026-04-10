@@ -1,14 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - Organized.</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style/cadastro.css">
 </head>
-
 <body>
 
-</body>
+  <a href="home.html" class="logo-link">
+    <img src="../assets/Logo off-white.png" alt="Logo" class="logo">
+  </a>
 
+  <div class="container">
+    <div class="brand-panel">
+      <h1>
+        <span>Bem-vindo</span>
+        Crie sua<br>conta agora.
+      </h1>
+      <p>Preencha seus dados ao lado e comece a aproveitar todos os recursos da plataforma.</p>
+    </div>
+
+    <div class="form-panel">
+      <h2>Cadastro</h2>
+      <p class="subtitle">Preencha as informações abaixo para continuar</p>
+
+      <div class="row">
+        <div class="field">
+          <label>Nome</label>
+          <input type="text" placeholder="Seu nome">
+        </div>
+        <div class="field">
+          <label>Sobrenome</label>
+          <input type="text" placeholder="Seu sobrenome">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" placeholder="seuemail@exemplo.com">
+      </div>
+
+      <div class="field">
+        <label>Telefone</label>
+        <input type="tel" placeholder="(00) 00000-0000">
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Senha</label>
+          <input type="password" placeholder="••••••••">
+        </div>
+        <div class="field">
+          <label>Confirmar senha</label>
+          <input type="password" placeholder="••••••••">
+        </div>
+      </div>
+
+      <label class="terms">
+        <input type="checkbox">
+        Concordo com os <a href="#">Termos de Uso</a> e <a href="#">Privacidade</a>
+      </label>
+
+      <button class="btn">Criar conta</button>
+
+      <p class="login-link">Já tem uma conta? <a href="login.html">Entrar</a></p>
+    </div>
+  </div>
+
+</body>
 </html>
