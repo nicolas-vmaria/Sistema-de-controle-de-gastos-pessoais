@@ -1,39 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../style/gernDados.css">
     <title>Gerenciamento de Dados - Organized.</title>
 </head>
 
 <body>
 
-    <h1>Bem-vindo(a) a sua pagina de Gerenciamento De Dados</h1>
-
+    <h1>Bem-vindo(a) à sua página de Gerenciamento de Dados</h1>
     <p>Adicione o seu saldo e seus gastos aqui mesmo!</p>
 
-    <h1>Seu saldo: <span id="saldo">R$ 0,00</span></h1>
-    
-    <input type="text" id="valor" placeholder="Digite aqui o seu salario ">
-    <input type="text" id="inputGastos" placeholder="Digite seus gastos aqui">
-    <input type="date" id="dataGastos" placeholder="Digite a data do gasto">
-    <button id="gasto">Enviar Gasto</button>
+    <h2>Seu saldo: <span id="saldo">R$ 0,00</span></h2>
+
+    <dialog id="modal-1">
+        <div class="modal-header">
+            <span class="modal-title">Adicionar salário</span>
+            <button class="close-modal" type="button" data-modal="modal-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="input-group">
+            <label for="valor">Valor do salário</label>
+            <input type="text" id="valorSalario" placeholder="Ex: 2000,00">
+        </div>
+
+        <button class="btn-confirm" id="btnSalario">Salvar saldo</button>
+    </dialog>
+
+    <dialog id="modal-2">
+        <div class="modal-header">
+            <span class="modal-title">Adicionar gasto</span>
+            <button class="close-modal" type="button" data-modal="modal-2">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="input-group">
+            <label for="gastos">Valor do gasto</label>
+            <input type="text" id="gastosInput" placeholder="Ex: 150,00">
+        </div>
+
+        <div class="input-group">
+            <label for="dataGastos">Data do gasto</label>
+            <input type="date" id="dataGastos">
+        </div>
+
+        <div class="input-group">
+            <label for="cat-gastos">Categoria</label>
+            <select id="cat-gastos">
+                <option disabled selected>Escolha uma categoria</option>
+            </select>
+        </div>
+
+        <button class="btn-confirm" id="btnGasto">Adicionar gasto</button>
+    </dialog>
+
+    <button class="open-modal" data-modal="modal-1">Enviar Saldo</button>
+    <button class="open-modal" data-modal="modal-2">Adicionar Gasto</button>
 
     <div id="gastos-container">
-        <h2>Exibindo Gastos</h2>
-
-        <ul id="listaGastos">
-            
-        </ul>
+        <h2>Seus gastos</h2>
+        <ul id="listaGastos"></ul>
     </div>
 
-    <button id="enviar">Enviar Saldo</button>
-   
-
-
+    <script src="../script/gernDados.js/script.js"></script>
 </body>
-
-<script src="../script/gernDados.js/script.js"></script>
 
 </html>
