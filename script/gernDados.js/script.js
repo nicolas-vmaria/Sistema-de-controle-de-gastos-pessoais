@@ -7,13 +7,17 @@ const saldo = document.getElementById('saldo');
 const openButtons = document.querySelectorAll('.open-modal');
 const closeButtons = document.querySelectorAll('.close-modal');
 const selectElement = document.getElementById('cat-gastos');
+const selectElementFiltro = document.getElementById('filtroCategoria');
+const gastosTotaisElement = document.getElementById("gastos-totais")
 let modal1 = document.getElementById('modal-1');
 let modal2 = document.getElementById('modal-2');
-
-
+const userLogado = JSON.parse(localStorage.getItem('usuarioLogado')); 
+const nameElement = document.getElementById('nameUser');
+const sairButton = document.getElementById('sair-conta');
 let salario = 0;    
 let gastosTotais = 0;
 let gastosArray = [];
+let saldoArray = [];
 let categorias = [
     "Aluguel/Moradia",
     "Supermercado",
@@ -33,6 +37,51 @@ let categorias = [
     "Outros"
 ];
 
+function salvarNoSorage(chave, valor){
+    localStorage.setItem(chave, JSON.stringify(valor));
+}
+
+function pegarDoStoreage(chave){
+    return JSON.parse(localStorage.getItem(chave));
+}
+
+function atualizarUsuario(){
+    let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    
+    usuarioLogado.saldo = salario;
+    usuarioLogado.gastosTotais = gastosTotais;
+    usuarioLogado.gastosArray = gastosArray;
+
+    salvarNoSorage('usuarioLogado', usuarioLogado);
+
+    let users = pegarDoStoreage('users') || [];
+    let index = users.findIndex(user => user.email === usuarioLogado.email);
+    users[index] = usuarioLogado;
+    salvarNoSorage('users', users);
+}
+
+function init() {
+    if (userLogado) {
+        nameElement.textContent = userLogado.nome.toUpperCase().slice(0, 1) + userLogado.nome.toLowerCase().slice(1);
+        salario = userLogado.saldo || 0;
+        gastosTotais = userLogado.gastosTotais || 0;
+        gastosArray = userLogado.gastosArray || [];
+        saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        gastosTotaisElement.textContent = gastosTotais.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
+        renderGastos();
+    } else {
+        alert('Nenhum usuário logado. Redirecionando para a página de login.');
+        window.location.href = 'login.html';
+    }
+}
+
+init();
+
+sairButton.addEventListener('click', () => {
+    localStorage.removeItem('usuarioLogado');
+    window.location.href = 'home.html';
+});
+
 function limparModal2() {
     inputGastos.value = '';
     document.getElementById('dataGastos').value = '';
@@ -43,12 +92,16 @@ function limparModal1() {
     salarioInput.value = '';
 }
 
+
 categorias.forEach(categoria => {
     const option = document.createElement('option');
     option.value = categoria;
     option.textContent = categoria;
     selectElement.appendChild(option);
+    selectElementFiltro.appendChild(option)
 }); 
+
+
 
 
 
@@ -97,6 +150,8 @@ btnSalario.addEventListener('click', () => {
             alert("Salário atualizado com sucesso!");
             modal1.close();
             limparModal1();
+            atualizarUsuario();
+            
         }
         
 
@@ -105,43 +160,29 @@ btnSalario.addEventListener('click', () => {
     }
 });
 
-function renderGastos(){
+function renderGastos(array = gastosArray){
     listElement.innerHTML = ''
 
-    gastosArray.forEach((todo, index)=>{
+    if(gastosArray.length === 0){
+        listElement.innerHTML = '<li class="empty-state"> Nenhum gasto registrado ainda </li>'
+        return;
+    }
+
+    array.slice().reverse().forEach((todo, index)=>{
     
     let liElement = document.createElement("li")
-    let gastosText = document.createTextNode(`R$ ${todo.valor}`)
     let posicao = index;
 
- 
     let dateformatada = new Date(todo.data + "T00:00:00").toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    let dateText = document.createTextNode(` - ${dateformatada}`)
-
-    let catgeoriaText = document.createTextNode(` - ${todo.categoria}`)
     
+     liElement.innerHTML = `
+            <div class="gasto-left">
+                <span class="gasto-valor">- R$ ${todo.valor}</span>
+                <span class="gasto-meta">${dateformatada}</span>
+            </div>
+            <span class="gasto-cat">${todo.categoria}</span>
+        `;
 
-    // let linkElement = document.createElement("a")
-    // linkElement.setAttribute("href", "#")
-
-    // let textLink = document.createTextNode("Excluir")
-    // linkElement.appendChild(textLink)
-    
-    // linkElement.setAttribute("onclick", `deletartarefas(${posicao})`)
-
-    let editElement = document.createElement("a")
-    editElement.setAttribute("href", "#")
-
-    // let textedit = document.createTextNode("Editar")
-    // editElement.appendChild(textedit)
-
-    editElement.setAttribute("onclick",`editarTarefa(${posicao})`)
-
-    // liElement.appendChild(linkElement)
-    liElement.appendChild(gastosText)
-    liElement.appendChild(dateText)
-    liElement.appendChild(catgeoriaText)
-    // liElement.appendChild(editElement)
     listElement.appendChild(liElement)
 })
 }
@@ -193,57 +234,55 @@ function adicionarGastos(){
     }
 
     gastosArray.push({valor: newGastos, data: dataGastos, categoria: categoriaGastos});
-    limparModal2();
     modal2.close();
+    limparModal2();
+    atualizarUsuario();
     renderGastos();
-    saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
+    saldo.textContent = salario.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
+    gastosTotaisElement.textContent = gastosTotais.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
     
 }
 
+function mostrarFiltro(){
+    let tipoFiltro = document.getElementById("tipofiltro").value;
 
-const _origRender = window.renderGastos;
-        document.addEventListener('DOMContentLoaded', () => {
-            // Override renderGastos to use new card layout
-            window.renderGastos = function () {
-                const listElement = document.getElementById('listaGastos');
-                const emptyState = document.getElementById('empty-state');
-                listElement.innerHTML = '';
+    document.getElementById("filtroCategoria").style.display = "none";
+    document.getElementById("filtro-data").style.display = "none";
+    document.getElementById("filtro-valor").style.display = "none";
 
-                if (gastosArray.length === 0) {
-                    const li = document.createElement('li');
-                    li.className = 'empty-state';
-                    li.id = 'empty-state';
-                    li.textContent = 'Nenhum gasto registrado ainda.';
-                    listElement.appendChild(li);
-                    return;
-                }
+    if(tipo !== ""){
+        document.getElementById(`filtro-${tipoFiltro}`).style.display = "block";
+    }
 
-                gastosArray.forEach((todo) => {
-                    const li = document.createElement('li');
+}
 
-                    const left = document.createElement('div');
-                    left.className = 'gasto-left';
+function filtrarGastos(){
+    let tipo = document.getElementById("tipofiltro").value
+    let filtrado = []
 
-                    const valor = document.createElement('span');
-                    valor.className = 'gasto-valor';
-                    valor.textContent = `− R$ ${parseFloat(todo.valor).toFixed(2).replace('.', ',')}`;
+    if(tipo === "categoria"){
+        let categoria = document.getElementById("filtro")
+        filtrado = gastosArray.filter(gasto => gasto.categoria === categoria)
+    } else if(tipo === "valor"){
+        let min = parseFloat(document.getElementById("filtroMin").value) || 0;
+        let max = parseFloat(document.getElementById("filtroMax").value) || 0;
+        filtrado = gastosArray.filter(gasto => gasto.valor >= min && gasto.valor >= max)
+    }else if(tipo === "data"){
+        let inicio = document.getElementById("dataInicial").value
+        let fim = document.getElementById("dataFinal").value
+        filtrado = gastosArray.filter(gasto => gasto.data >= inicio && gasto.data <= fim)
+    }else {
+        renderGastos()
+        return
+    }
 
-                    const meta = document.createElement('span');
-                    meta.className = 'gasto-meta';
-                    const dateFormatada = new Date(todo.data + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                    meta.textContent = dateFormatada;
+    renderGastos(filtrado)
 
-                    left.appendChild(valor);
-                    left.appendChild(meta);
 
-                    const cat = document.createElement('span');
-                    cat.className = 'gasto-cat';
-                    cat.textContent = todo.categoria;
+}
 
-                    li.appendChild(left);
-                    li.appendChild(cat);
-                    listElement.appendChild(li);
-                });
-            };
-        });
+function limparFiltro(){
+    document.getElementById("tipoFiltro").value = ""
+    mostrarFiltro()
+    renderGastos()
+}

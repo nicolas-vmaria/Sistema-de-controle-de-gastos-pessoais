@@ -22,6 +22,7 @@ function logar(e) {
     const userValidado= users.find(user => user.email === email.value && user.senha === senha.value)
 
     if(userValidado){
+        localStorage.setItem('usuarioLogado', JSON.stringify(userValidado));
         window.location.href = '../pages/gerenciamentoDados.html'
     }else{
         showToast('Email ou senha incorretos!','error')

@@ -47,14 +47,31 @@ function cadastrar(e){
         sobrenome: sobrenomeIn.value,
         email: emailIn.value,
         telefone: telIn.value,
-        senha: senhaIn.value
+        senha: senhaIn.value,
+        saldo: 0,
+        gastosArray: [],
+        gastosTotais: 0,
+        saldoArray: []
     }
 
-    
-
     const users = JSON.parse(localStorage.getItem('users') || '[]')
+
+    if(users.some(user => user.email === newUser.email)) {
+        showToast('Este email já está cadastrado.', 'error')
+        return
+    }
+
+    if(users.some(user => user.telefone === newUser.telefone)) {
+        showToast('Este telefone já está cadastrado.', 'error')
+        return
+    }
+
     users.push(newUser)
+
     localStorage.setItem('users', JSON.stringify(users))
+
+    localStorage.setItem('usuarioLogado', JSON.stringify(newUser));
+
     showToast('Conta criada com sucesso!', 'success')
 
     window.location.href = '../pages/gerenciamentoDados.html'
