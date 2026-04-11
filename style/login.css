@@ -55,7 +55,7 @@ body::before {
 .logo-link:hover { opacity: .75; }
 
 .logo {
-  height: 200px;
+  height: 100px;
   position: fixed;
   top: 0;
   width: auto;

@@ -202,3 +202,48 @@ function adicionarGastos(){
 }
 
 
+const _origRender = window.renderGastos;
+        document.addEventListener('DOMContentLoaded', () => {
+            // Override renderGastos to use new card layout
+            window.renderGastos = function () {
+                const listElement = document.getElementById('listaGastos');
+                const emptyState = document.getElementById('empty-state');
+                listElement.innerHTML = '';
+
+                if (gastosArray.length === 0) {
+                    const li = document.createElement('li');
+                    li.className = 'empty-state';
+                    li.id = 'empty-state';
+                    li.textContent = 'Nenhum gasto registrado ainda.';
+                    listElement.appendChild(li);
+                    return;
+                }
+
+                gastosArray.forEach((todo) => {
+                    const li = document.createElement('li');
+
+                    const left = document.createElement('div');
+                    left.className = 'gasto-left';
+
+                    const valor = document.createElement('span');
+                    valor.className = 'gasto-valor';
+                    valor.textContent = `− R$ ${parseFloat(todo.valor).toFixed(2).replace('.', ',')}`;
+
+                    const meta = document.createElement('span');
+                    meta.className = 'gasto-meta';
+                    const dateFormatada = new Date(todo.data + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    meta.textContent = dateFormatada;
+
+                    left.appendChild(valor);
+                    left.appendChild(meta);
+
+                    const cat = document.createElement('span');
+                    cat.className = 'gasto-cat';
+                    cat.textContent = todo.categoria;
+
+                    li.appendChild(left);
+                    li.appendChild(cat);
+                    listElement.appendChild(li);
+                });
+            };
+        });

@@ -4,18 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Dados - organized.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../style/gernDados.css">
-    <title>Gerenciamento de Dados - Organized.</title>
 </head>
 
 <body>
 
-    <h1>Bem-vindo(a) à sua página de Gerenciamento de Dados</h1>
-    <p>Adicione o seu saldo e seus gastos aqui mesmo!</p>
+    <!-- NAV -->
+    <nav>
+        <a href="home.html" class="nav-logo">organized.</a>
+        <div class="nav-user">
+            <span class="nav-user-name">Minha conta</span>
+            <div class="nav-avatar" id="nav-avatar">?</div>
+        </div>
+    </nav>
 
-    <h2>Seu saldo: <span id="saldo">R$ 0,00</span></h2>
+    <!-- MAIN -->
+    <div class="page-wrapper">
 
+        <!-- Header -->
+        <div class="page-header">
+            <div class="label">Finanças pessoais</div>
+            <h1>Gerenciamento<br>de Dados</h1>
+            <p>Adicione seu saldo e registre seus gastos aqui.</p>
+        </div>
+
+        <!-- Saldo Card -->
+        <div class="saldo-card">
+            <div class="saldo-info">
+                <div class="saldo-label">Saldo atual</div>
+                <div id="saldo">R$ 0,00</div>
+            </div>
+            <div class="saldo-actions">
+                <button class="btn-primary open-modal" data-modal="modal-1">Enviar Saldo</button>
+                <button class="btn-secondary open-modal" data-modal="modal-2">Adicionar Gasto</button>
+            </div>
+        </div>
+
+        <!-- Gastos -->
+        <div class="gastos-section" id="gastos-container">
+            <div class="section-heading">Seus gastos</div>
+            <ul class="gastos-list" id="listaGastos">
+                <li class="empty-state" id="empty-state">Nenhum gasto registrado ainda.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- MODAL 1 — Salário -->
     <dialog id="modal-1">
         <div class="modal-header">
             <span class="modal-title">Adicionar salário</span>
@@ -23,15 +62,14 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-
         <div class="input-group">
-            <label for="valor">Valor do salário</label>
+            <label for="valorSalario">Valor do salário</label>
             <input type="text" id="valorSalario" placeholder="Ex: 2000,00">
         </div>
-
         <button class="btn-confirm" id="btnSalario">Salvar saldo</button>
     </dialog>
 
+    <!-- MODAL 2 — Gasto -->
     <dialog id="modal-2">
         <div class="modal-header">
             <span class="modal-title">Adicionar gasto</span>
@@ -39,36 +77,25 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
-
         <div class="input-group">
-            <label for="gastos">Valor do gasto</label>
+            <label for="gastosInput">Valor do gasto</label>
             <input type="text" id="gastosInput" placeholder="Ex: 150,00">
         </div>
-
         <div class="input-group">
             <label for="dataGastos">Data do gasto</label>
             <input type="date" id="dataGastos">
         </div>
-
         <div class="input-group">
             <label for="cat-gastos">Categoria</label>
             <select id="cat-gastos">
                 <option disabled selected>Escolha uma categoria</option>
             </select>
         </div>
-
         <button class="btn-confirm" id="btnGasto">Adicionar gasto</button>
     </dialog>
 
-    <button class="open-modal" data-modal="modal-1">Enviar Saldo</button>
-    <button class="open-modal" data-modal="modal-2">Adicionar Gasto</button>
-
-    <div id="gastos-container">
-        <h2>Seus gastos</h2>
-        <ul id="listaGastos"></ul>
-    </div>
-
     <script src="../script/gernDados.js/script.js"></script>
+
 </body>
 
 </html>
