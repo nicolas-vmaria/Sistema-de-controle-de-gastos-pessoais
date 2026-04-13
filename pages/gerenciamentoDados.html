@@ -45,18 +45,21 @@
                 <div id="gastos-totais">R$ 0,00</div>
             </div>
             <div class="saldo-actions">
-                <button class="btn-primary open-modal" data-modal="modal-1">Enviar Saldo</button>
+                <button class="btn-primary open-modal" data-modal="modal-1">Enviar Receita</button>
                 <button class="btn-secondary open-modal" data-modal="modal-2">Adicionar Gasto</button>
             </div>
         </div>
 
         <!-- Gastos -->
         <div class="gastos-section" id="gastos-container">
-            <div class="section-heading">Seus gastos</div>
-            <ul class="gastos-list" id="listaGastos">
-                <li class="empty-state" id="empty-state">Nenhum gasto registrado ainda.</li>
-            </ul>
+            
+            <div class="section-heading">Suas Transações</div>
             <button class="open-modal" data-modal="modal-3">Filtro</button>
+            <div id="limparFiltroDiv" style="display: none;">
+                <button class="btn-confirm" id="limparFiltro">Limpar filtro</button>
+            </div>
+            <ul class="gastos-list" id="listaTransacoes">
+                
         </div>
 
     </div>
@@ -64,16 +67,34 @@
     <!-- MODAL 1 — Salário -->
     <dialog id="modal-1">
         <div class="modal-header">
-            <span class="modal-title">Adicionar salário</span>
+            <span class="modal-title">Adicionar Receita</span>
             <button class="close-modal" type="button" data-modal="modal-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
         <div class="input-group">
-            <label for="valorSalario">Valor do salário</label>
+            <label for="nomeSalario">Receita</label>
+            <select id="receita-user">
+                <option value="salario" selected>Salário</option>
+                <option value="outro">Outros</option>
+            </select>
+        </div>
+
+        <div class="input-group" style="display: none;" id="outro-receita-group">
+            <label for="nomeReceita">Nome da receita</label>
+            <input type="text" id="nomeReceita" placeholder="Ex: Freelancer, Presente...">
+        </div>
+
+        <div class="input-group">
+            <label for="dataSaldo">Data do saldo</label>
+            <input type="date" id="dataSaldo">
+        </div>
+
+        <div class="input-group">
+            <label for="valorSalario">Ganho mensal</label>
             <input type="text" id="valorSalario" placeholder="Ex: 2000,00">
         </div>
-        <button class="btn-confirm" id="btnSalario">Salvar saldo</button>
+        <button class="btn-confirm" id="btnSalario">Salvar receita</button>
     </dialog>
 
     <!-- MODAL 2 — Gasto -->
@@ -84,6 +105,12 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
+
+        <div class="input-group">
+            <label for="nomeGasto">Nome do gasto</label>
+            <input type="text" id="nomeGasto" placeholder="Ex: Netflix, Maça...">
+        </div>
+
         <div class="input-group">
             <label for="gastosInput">Valor do gasto</label>
             <input type="text" id="gastosInput" placeholder="Ex: 150,00">
@@ -93,9 +120,9 @@
             <input type="date" id="dataGastos">
         </div>
         <div class="input-group">
-            <label for="cat-gastos">Categoria</label>
-            <select id="cat-gastos">
-                <option disabled selected>Escolha uma categoria</option>
+            <label>Categoria</label>
+            <select id="categoriaGastos">
+                <option disabled selected>Selecione uma opção</option>
             </select>
         </div>
         <button class="btn-confirm" id="btnGasto">Adicionar gasto</button>
@@ -104,15 +131,36 @@
     <!-- MODAL - FILTRO -->
     <dialog id="modal-3">
         <div class="modal-header">
-            <span class="modal-title">Filtrar gastos</span>
+            <span class="modal-title">Filtrar</span>
             <button class="close-modal" type="button" data-modal="modal-3">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
         <div class="input-group">
-            <!-- <label for="tipofiltro">Filtrar por:</label> -->
-            <select id="tipofiltro" onchange="mostrarFiltro()"> 
+            <label for="tipoTransacao">Tipo de transação</label>
+            <select id="tipoTransacao">
+                <option value="" disabled selected>Selecione uma opção</option>
+                <option value="saldo">Rendimentos</option>
+                <option value="gasto">Despesas</option>
+            </select>
+        </div>
+
+        <div id="filtro-data-saldo" style="display: none;">
+            <div class="input-group">
+                <label>Data Inicial</label>
+                <input type="date" id="dataInicialSaldo">
+            </div>
+
+            <div class="input-group">
+                <label>Data Final</label>
+                <input type="date" id="dataFinalSaldo">
+            </div>
+        </div>
+
+        <div class="input-group" style="display: none;" id="filtro-group">
+            <label for="tipofiltro">Filtrar por:</label>
+            <select id="tipofiltro"> 
                 <option value="" disabled selected>Selecione uma opção</option>
                 <option value="data">Data</option>
                 <option value="categoria">Categoria</option>
@@ -120,10 +168,12 @@
             </select>
         </div>
 
-        <div id="filtroCategoria" style="display: none;">
+        <div id="filtro-categoria" style="display: none;">
             <div class="input-group">
                 <label>Categoria</label>
-                <select id="filtroCategoria"></select>
+                <select id="selected-Categoria">
+                    <option value="" disabled selected>Selecione uma opção</option>
+                </select>
             </div>
         </div>
 
@@ -151,13 +201,30 @@
             </div>
         </div>
 
-        <button class="btn-confirm" id="btnFiltro" onclick="filtrarGastos()">Aplicar filtro</button>
-        <button class="btn-confirm" id="btnFiltro" onclick="limparFiltro()">Limpar filtro</button>
+        <button class="btn-confirm" id="btnFiltro">Aplicar filtro</button>
 
+    </dialog>
+
+    <!-- MODAL DE CONFIRMAÇÃO -->
+
+    <dialog id="modal-confirm">
+        <div class="modal-header">
+            <span class="modal-title">Confirmação</span>
+        </div>
+        <p id="confirm-msg" style="font-size: .85rem; color: var(--cream-mid); margin-bottom: 24px;"></p>
+        <div style="display: flex; gap: 12px;">
+            <button class="btn-secondary" id="confirm-nao" style="flex: 1;">Cancelar</button>
+            <button class="btn-confirm" id="confirm-sim" style="flex: 1;">Confirmar</button>
+        </div>
     </dialog>
     
 
-    <script src="../script/gernDados.js/script.js"></script>
+  <div id="toast" class="toast">
+    <span id="toast-icon" class="toast-icon"></span>
+    <span id="toast-msg"></span>
+  </div>
+
+    <script type="module" src="../script/gernDados/script.js"></script>
 
 </body>
 

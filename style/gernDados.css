@@ -215,7 +215,7 @@ nav {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 20px;
 }
 
 .gastos-list li {
@@ -240,6 +240,12 @@ nav {
   display: flex;
   flex-direction: column;
   gap: 3px;
+}
+
+.gasto-nome {
+  font-size: .85rem;
+  font-weight: 500;
+  color: var(--cream);
 }
 
 .gasto-valor {
@@ -429,4 +435,86 @@ dialog {
   .saldo-actions button { flex: 1; }
 
   dialog { width: calc(100vw - 40px); }
+}
+
+.toast {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  background: var(--black);
+  color: var(--cream);
+  font-family: 'Poppins', sans-serif;
+  font-size: .85rem;
+  font-weight: 500;
+  border: 1px solid rgba(254,253,234,0.15);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
+  z-index: 999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.toast.success { border-left: 4px solid #4ade80; }
+.toast.error   { border-left: 4px solid #f87171; }
+
+.toast-icon { font-size: 1rem; }
+
+.saldo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.saldo-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border: 1px solid var(--cream-dim);
+  border-radius: 14px;
+  background: rgba(254,253,234,0.02);
+  font-size: .85rem;
+  transition: border-color .2s, background .2s;
+}
+
+.saldo-list li:hover {
+  border-color: rgba(254,253,234,0.22);
+  background: rgba(254,253,234,0.04);
+}
+
+.saldo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.saldo-nome {
+  font-size: .85rem;
+  font-weight: 500;
+  color: var(--cream);
+}
+
+.saldo-valor {
+  font-weight: 600;
+  font-size: .95rem;
+  color: var(--green); /* verde para receita, diferente do vermelho do gasto */
+}
+
+.saldo-data {
+  font-size: .72rem;
+  color: var(--cream-mid);
+  font-weight: 300;
 }

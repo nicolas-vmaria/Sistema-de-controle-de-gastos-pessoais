@@ -1,9 +1,11 @@
+import { showToast } from './toast.js';
 const nomeIn = document.getElementById('nome')
 const sobrenomeIn = document.getElementById('sobrenome')
 const emailIn = document.getElementById('email')
 const telIn = document.getElementById('tel')
 const senhaIn = document.getElementById('senha')
 const senhaConfirmIn = document.getElementById('senhaConfirm')
+
 
 telIn.addEventListener('input', (e) => {
     let value = e.target.value.replace(/\D/g, '')
@@ -17,22 +19,6 @@ telIn.addEventListener('input', (e) => {
     e.target.value = value
 })
 
-let toastTimer = null
-
-function showToast(msg, type = 'success') {
-    const toast = document.getElementById('toast')
-    const toastMsg = document.getElementById('toast-msg')
-    const toastIcon = document.getElementById('toast-icon')
-
-    toastMsg.textContent = msg
-    toastIcon.textContent = type === 'success' ? '✓' : '✕'
-    toast.className = `toast ${type} show`
-
-    clearTimeout(toastTimer)
-    toastTimer = setTimeout(() => {
-        toast.classList.remove('show')
-    }, 3000)
-}
 
 function cadastrar(e){
     e.preventDefault()
@@ -51,7 +37,8 @@ function cadastrar(e){
         saldo: 0,
         gastosArray: [],
         gastosTotais: 0,
-        saldoArray: []
+        saldoArray: [],
+        combinedArray: []
     }
 
     const users = JSON.parse(localStorage.getItem('users') || '[]')
@@ -77,3 +64,4 @@ function cadastrar(e){
     window.location.href = '../pages/gerenciamentoDados.html'
 }
 
+document.getElementById('formCadastro').addEventListener('submit', cadastrar);

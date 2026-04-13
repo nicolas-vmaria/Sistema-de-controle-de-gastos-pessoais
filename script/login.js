@@ -1,20 +1,8 @@
+import { showToast } from "./toast.js";
 const email = document.getElementById("email")
 const senha = document.getElementById("senha")
-
-function showToast(msg, type = 'success') {
-    const toast = document.getElementById('toast')
-    const toastMsg = document.getElementById('toast-msg')
-    const toastIcon = document.getElementById('toast-icon')
-
-    toastMsg.textContent = msg
-    toastIcon.textContent = type === 'success' ? '✓' : '✕'
-    toast.className = `toast ${type} show`
-
-    clearTimeout(toastTimer)
-    toastTimer = setTimeout(() => {
-        toast.classList.remove('show')
-    }, 3000)
-}
+const form = document.getElementById("loginForm")
+const buttonToggle = document.getElementById("buttonToggle")
 
 function logar(e) {
     e.preventDefault()
@@ -30,6 +18,9 @@ function logar(e) {
 
 }
 
+form.addEventListener('submit', logar)
+
+
 function toggleSenha() {
       const input = document.getElementById('senha');
       const iconEye = document.getElementById('icon-eye');
@@ -44,3 +35,5 @@ function toggleSenha() {
         iconEyeOff.style.display = 'none';
       }
     }
+
+buttonToggle.addEventListener('click', toggleSenha);
