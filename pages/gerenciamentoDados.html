@@ -50,16 +50,56 @@
             </div>
         </div>
 
+        <!-- CHART SECTION -->
+        <div class="chart-section" id="chart-section" style="display:none;">
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <div>
+                        <div class="chart-card-label">Visão Geral</div>
+                        <div class="chart-card-title" id="chart-period-title">Últimas transações</div>
+                    </div>
+                    <div class="chart-legend">
+                        <span class="legend-dot green"></span><span>Receitas</span>
+                        <span class="legend-dot red"></span><span>Despesas</span>
+                    </div>
+                </div>
+
+                <div class="chart-stats">
+                    <div class="chart-stat-box">
+                        <div class="chart-stat-label">Receitas</div>
+                        <div class="chart-stat-value positive" id="chart-receitas">R$ 0,00</div>
+                    </div>
+                    <div class="chart-stat-box">
+                        <div class="chart-stat-label">Despesas</div>
+                        <div class="chart-stat-value negative" id="chart-despesas">R$ 0,00</div>
+                    </div>
+                    <div class="chart-stat-box">
+                        <div class="chart-stat-label">Saldo</div>
+                        <div class="chart-stat-value" id="chart-saldo-val">R$ 0,00</div>
+                    </div>
+                </div>
+
+                <div class="chart-bars-wrapper">
+                    <div class="chart-bars" id="chart-bars"></div>
+                </div>
+
+                <div class="chart-recent">
+                    <div class="chart-recent-title">Transações recentes</div>
+                    <div id="chart-tx-list"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- Gastos -->
         <div class="gastos-section" id="gastos-container">
-            
+
             <div class="section-heading">Suas Transações</div>
             <button class="open-modal" data-modal="modal-3">Filtro</button>
             <div id="limparFiltroDiv" style="display: none;">
                 <button class="btn-confirm" id="limparFiltro">Limpar filtro</button>
             </div>
             <ul class="gastos-list" id="listaTransacoes">
-                
+
         </div>
 
     </div>
@@ -160,7 +200,7 @@
 
         <div class="input-group" style="display: none;" id="filtro-group">
             <label for="tipofiltro">Filtrar por:</label>
-            <select id="tipofiltro"> 
+            <select id="tipofiltro">
                 <option value="" disabled selected>Selecione uma opção</option>
                 <option value="data">Data</option>
                 <option value="categoria">Categoria</option>
@@ -217,13 +257,14 @@
             <button class="btn-confirm" id="confirm-sim" style="flex: 1;">Confirmar</button>
         </div>
     </dialog>
-    
 
-  <div id="toast" class="toast">
-    <span id="toast-icon" class="toast-icon"></span>
-    <span id="toast-msg"></span>
-  </div>
 
+    <div id="toast" class="toast">
+        <span id="toast-icon" class="toast-icon"></span>
+        <span id="toast-msg"></span>
+    </div>
+
+    <script type="module" src="../script/gernDados/chart.js"></script>
     <script type="module" src="../script/gernDados/script.js"></script>
 
 </body>
