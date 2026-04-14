@@ -282,12 +282,18 @@ nav {
 }
 
 /* ── MODALS ── */
-dialog::backdrop {
+dialog:not(#toast)::backdrop {
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(4px);
 }
 
-dialog {
+#toast::backdrop {
+  display: none;
+}
+
+
+
+dialog:not(#toast) {
   border: 1px solid var(--cream-dim);
   background: #0d0d0d;
   color: var(--cream);
@@ -439,6 +445,8 @@ dialog {
 
 .toast {
   position: fixed;
+  top: auto;
+  left: auto;
   bottom: 32px;
   right: 32px;
   display: flex;
@@ -457,7 +465,6 @@ dialog {
   transform: translateY(16px);
   pointer-events: none;
   transition: opacity .3s ease, transform .3s ease;
-  z-index: 999;
 }
 
 .toast.show {
