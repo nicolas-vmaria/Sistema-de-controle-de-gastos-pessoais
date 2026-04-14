@@ -17,12 +17,15 @@ const nomeGastos = document.getElementById('nomeGasto');
 const receitaUserSelect = document.getElementById('receita-user');
 const nomeReceitaInput = document.getElementById('nomeReceita');
 const dataSaldoInput = document.getElementById('dataSaldo');
-const selectTipoFiltro = document.getElementById("tipoTransacao");
+const ctx = document.getElementById('meuGrafico').getContext('2d');
 let modal1 = document.getElementById('modal-1');
 let modal2 = document.getElementById('modal-2');
 let modal3 = document.getElementById('modal-3');
+let categoriasFiltradas = [];
+let valoresPorCategoria = [];
 let salario = 0;    
 let gastosTotais = 0;
+let meuGrafico = null;
 let gastosArray = [];
 let saldoArray = [];
 let combinedArray = [];
@@ -79,8 +82,8 @@ function init() {
         saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         
         gastosTotaisElement.textContent = gastosTotais.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
-       
         renderSaldoEGastos();
+        renderGrafico();
     } else {
         showToast('Nenhum usuário logado. Redirecionando para a página de login.', 'error');
         window.location.href = 'login.html';
@@ -259,7 +262,6 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null){
         });
     });
 
-
     combinedArray.sort((a, b) => new Date(b.data) - new Date(a.data));
 
     if(combinedArray.length === 0){
@@ -354,6 +356,7 @@ async function adicionarGastos(){
     limparModal2();
     atualizarUsuario();
     renderSaldoEGastos();
+    atualizarGrafico(); 
     saldo.textContent = salario.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
     gastosTotaisElement.textContent = gastosTotais.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
     
@@ -466,3 +469,111 @@ function limparFiltro(){
     
 }
 document.getElementById("limparFiltro").addEventListener("click", limparFiltro);
+
+
+
+function atualizarGrafico() {
+
+        categoriasFiltradas = categorias.filter(cat =>
+        gastosArray.some(gasto => gasto.categoria === cat)
+        )
+
+        valoresPorCategoria = categoriasFiltradas.map(categoria => {
+        return gastosArray
+            .filter(gasto => gasto.categoria === categoria)
+            .reduce((total, gasto) => total + Number(gasto.valor), 0);
+    });
+
+    const coresGastos = valoresPorCategoria.map((valor, index) =>{
+                const opacity = 0.2 + (index / valoresPorCategoria.length) * 0.7;
+                return `rgba(254, 253, 234, ${opacity})`;
+            })
+
+    meuGrafico.data.labels = categoriasFiltradas;
+    meuGrafico.data.datasets[0].data = valoresPorCategoria;
+    meuGrafico.data.datasets[0].backgroundColor = coresGastos;
+    meuGrafico.update();
+}
+
+
+function renderGrafico(){
+    categoriasFiltradas = categorias.filter(cat =>
+    gastosArray.some(gasto => gasto.categoria === cat)
+    )
+
+    valoresPorCategoria = categoriasFiltradas.map(categoria => {
+        return gastosArray
+        .filter(gasto => gasto.categoria === categoria)
+        .reduce((total, gasto) => total + Number(gasto.valor), 0);
+    });
+
+    const coresGastos = valoresPorCategoria.map((_, index) =>{
+                const opacity = 0.2 + (index / valoresPorCategoria.length) * 0.7;
+                return `rgba(254, 253, 234, ${opacity})`;
+            })
+
+    meuGrafico = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: categoriasFiltradas,
+        datasets: [
+            {
+                label: 'Gastos',
+                data: valoresPorCategoria,
+                backgroundColor: coresGastos,
+                borderRadius: 6,
+                borderWidth: 0,
+                borderSkipped: false,
+            },
+
+            
+        ]
+     },
+
+     options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        onHover: (event, elements) => {
+            if(elements.length > 0){
+             let index = elements[0].index;
+             let categoria = categoriasFiltradas[index];
+             let valorCategoria = valoresPorCategoria[index];
+
+                document.getElementById("gastos-totais-filtro").textContent =
+                    valorCategoria.toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
+                document.getElementById('gastos-cat-label').textContent = categoria.toUpperCase();
+
+                console.log(salario)
+                let saldoSemCategoria = salario + valorCategoria
+                document.getElementById("saldo-filtro").textContent = saldoSemCategoria.toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
+                document.getElementById('saldo-label').textContent = 'SALDO SEM ' + categoria.toUpperCase();
+            } else {
+                document.getElementById("gastos-totais-filtro").textContent = gastosTotais.toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
+                document.getElementById('gastos-cat-label').textContent = 'GASTOS';
+            }
+        },
+        plugins: {
+            legend: {display: false},
+        tooltip: {
+            enabled: false},
+        },
+
+scales: {
+        x: {display: true,
+            ticks: {
+                color: 'rgba(254,253,234,0.5)',
+                font: { familly: 'Poppins', size: 15 },
+                maxRotation: 45
+        },
+        grid: {display: false},
+        border : {display: false}
+    },
+        y: {display: false}
+     }
+
+     
+}});
+
+   
+}
+

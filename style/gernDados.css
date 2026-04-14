@@ -518,3 +518,47 @@ dialog {
   color: var(--cream-mid);
   font-weight: 300;
 }
+
+.dashboard-panel {
+    border: 1px solid var(--cream-dim);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 32px;
+    background: rgba(254,253,234,0.02);
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.dash-card {
+    background: rgba(254,253,234,0.04);
+    border: 1px solid var(--cream-dim);
+    border-radius: 14px;
+    padding: 20px 24px;
+}
+
+.dash-card-label {
+    font-size: .65rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--cream-mid);
+    margin-bottom: 10px;
+}
+
+.dash-card-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--cream);
+}
+
+.dash-card-value.red { color: var(--red); }
+
+@media (max-width: 640px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .dash-card-value { font-size: 1.3rem; }
+}
