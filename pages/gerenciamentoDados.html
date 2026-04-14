@@ -61,6 +61,7 @@
                     <div class="dash-card-value" id="saldo-filtro">R$ 0,00</div>
                 </div>
             </div>
+
         
             <!-- Navegação de mês -->
             <div class="grafico-nav">
@@ -69,21 +70,31 @@
                 <button id="btn-mes-proximo">&#8594;</button>
             </div>
         
+
             <div style="position: relative; width: 100%; height: 200px;">
                 <canvas id="meuGrafico"></canvas>
             </div>
         </div>
 
         <!-- Gastos -->
-        <div class="gastos-section" id="gastos-container">''
-            
-            <div class="section-heading">Suas Transações</div>
-            <button class="open-modal" data-modal="modal-3">Filtro</button>
+
+      
+
+
+        <div class="gastos-section" id="gastos-container">
+
+            <div class="section-heading">Suas Transações
+            <button class="open-modal" id="filtro-button" data-modal="modal-3">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                    fill="#fefdea">
+                    <path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z" />
+                </svg></button>
+            </div>
             <div id="limparFiltroDiv" style="display: none;">
                 <button class="btn-confirm" id="limparFiltro">Limpar filtro</button>
             </div>
             <ul class="gastos-list" id="listaTransacoes">
-                
+
         </div>
 
     </div>
@@ -184,7 +195,7 @@
 
         <div class="input-group" style="display: none;" id="filtro-group">
             <label for="tipofiltro">Filtrar por:</label>
-            <select id="tipofiltro"> 
+            <select id="tipofiltro">
                 <option value="" disabled selected>Selecione uma opção</option>
                 <option value="data">Data</option>
                 <option value="categoria">Categoria</option>
@@ -241,16 +252,16 @@
             <button type="button" class="btn-confirm" id="confirm-sim" style="flex: 1;">Confirmar</button>
         </div>
     </dialog>
-    
-   
 
-  <dialog id="toast" class="toast">
-    <span id="toast-icon" class="toast-icon"></span>
-    <span id="toast-msg"></span>
-  </dialog>
+
+
+    <dialog id="toast" class="toast">
+        <span id="toast-icon" class="toast-icon"></span>
+        <span id="toast-msg"></span>
+    </dialog>
 
     <script type="module" src="../script/gernDados/script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
 
 </body>

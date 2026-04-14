@@ -1,12 +1,22 @@
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+* {
+  font-family: poppins;
+}
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
   --black: #000000;
   --cream: #fefdea;
-  --cream-mid: rgba(254,253,234,0.6);
-  --cream-dim: rgba(254,253,234,0.12);
+  --cream-mid: rgba(254, 253, 234, 0.6);
+  --cream-dim: rgba(254, 253, 234, 0.12);
   --gray: #888;
   --indigo: #6366f1;
   --indigo-dark: #4f46e5;
@@ -14,7 +24,9 @@
   --red: #f87171;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: 'Poppins', sans-serif;
@@ -30,8 +42,8 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at 15% 20%, rgba(254,253,234,0.03) 0%, transparent 50%),
-    radial-gradient(circle at 85% 80%, rgba(99,102,241,0.04) 0%, transparent 40%);
+    radial-gradient(circle at 15% 20%, rgba(254, 253, 234, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.04) 0%, transparent 40%);
   pointer-events: none;
   z-index: 0;
 }
@@ -39,7 +51,9 @@ body::before {
 /* ── NAV ── */
 nav {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   display: flex;
   align-items: center;
@@ -47,7 +61,7 @@ nav {
   padding: 0 40px;
   height: 64px;
   border-bottom: 1px solid var(--cream-dim);
-  background: rgba(0,0,0,0.85);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(12px);
 }
 
@@ -134,7 +148,7 @@ nav {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  background: linear-gradient(135deg, rgba(254,253,234,0.02) 0%, rgba(254,253,234,0.04) 100%);
+  background: linear-gradient(135deg, rgba(254, 253, 234, 0.02) 0%, rgba(254, 253, 234, 0.04) 100%);
   animation: fadeUp .6s ease-out .1s both;
 }
 
@@ -176,7 +190,7 @@ nav {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(254,253,234,0.15);
+  box-shadow: 0 8px 24px rgba(254, 253, 234, 0.15);
 }
 
 .btn-secondary {
@@ -193,14 +207,16 @@ nav {
 }
 
 .btn-secondary:hover {
-  border-color: rgba(254,253,234,0.35);
-  background: rgba(254,253,234,0.04);
+  border-color: rgba(254, 253, 234, 0.35);
+  background: rgba(254, 253, 234, 0.04);
 }
 
 /* ── GASTOS SECTION ── */
 .gastos-section {
   animation: fadeUp .6s ease-out .2s both;
 }
+
+
 
 .section-heading {
   font-size: .7rem;
@@ -209,6 +225,9 @@ nav {
   letter-spacing: 3px;
   color: var(--cream-mid);
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .gastos-list {
@@ -225,15 +244,15 @@ nav {
   padding: 16px 20px;
   border: 1px solid var(--cream-dim);
   border-radius: 14px;
-  background: rgba(254,253,234,0.02);
+  background: rgba(254, 253, 234, 0.02);
   font-size: .85rem;
   transition: border-color .2s, background .2s;
   gap: 12px;
 }
 
 .gastos-list li:hover {
-  border-color: rgba(254,253,234,0.22);
-  background: rgba(254,253,234,0.04);
+  border-color: rgba(254, 253, 234, 0.22);
+  background: rgba(254, 253, 234, 0.04);
 }
 
 .gasto-left {
@@ -283,7 +302,7 @@ nav {
 
 /* ── MODALS ── */
 dialog:not(#toast)::backdrop {
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(4px);
 }
 
@@ -301,7 +320,7 @@ dialog:not(#toast) {
   border-radius: 20px;
   padding: 28px;
   font-family: 'Poppins', sans-serif;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
   animation: modalIn .3s ease-out;
   position: fixed;
   top: 50%;
@@ -311,8 +330,15 @@ dialog:not(#toast) {
 }
 
 @keyframes modalIn {
-  from { opacity: 0; transform: translate(-50%, calc(-50% - 20px)); }
-  to   { opacity: 1; transform: translate(-50%, -50%); }
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 20px));
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .modal-header {
@@ -363,7 +389,7 @@ dialog:not(#toast) {
 .input-group input,
 .input-group select {
   border: 1.5px solid var(--cream-dim);
-  background: rgba(254,253,234,0.03);
+  background: rgba(254, 253, 234, 0.03);
   border-radius: 10px;
   padding: 11px 14px;
   font-size: .85rem;
@@ -382,12 +408,12 @@ dialog:not(#toast) {
 
 .input-group input:focus,
 .input-group select:focus {
-  border-color: rgba(254,253,234,0.45);
-  box-shadow: 0 0 0 3px rgba(254,253,234,0.05);
+  border-color: rgba(254, 253, 234, 0.45);
+  box-shadow: 0 0 0 3px rgba(254, 253, 234, 0.05);
 }
 
 .input-group input::placeholder {
-  color: rgba(254,253,234,0.25);
+  color: rgba(254, 253, 234, 0.25);
 }
 
 .input-group input[type="date"]::-webkit-calendar-picker-indicator {
@@ -412,22 +438,35 @@ dialog:not(#toast) {
 
 .btn-confirm:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(254,253,234,0.15);
+  box-shadow: 0 8px 24px rgba(254, 253, 234, 0.15);
 }
 
 /* ── ANIMATIONS ── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
-  nav { padding: 0 20px; }
+  nav {
+    padding: 0 20px;
+  }
 
-  .page-wrapper { padding: 88px 20px 48px; }
+  .page-wrapper {
+    padding: 88px 20px 48px;
+  }
 
-  .page-header h1 { font-size: 1.7rem; }
+  .page-header h1 {
+    font-size: 1.7rem;
+  }
 
   .saldo-card {
     flex-direction: column;
@@ -435,12 +474,21 @@ dialog:not(#toast) {
     padding: 24px;
   }
 
-  .saldo-info #saldo { font-size: 2rem; }
+  .saldo-info #saldo {
+    font-size: 2rem;
+  }
 
-  .saldo-actions { width: 100%; }
-  .saldo-actions button { flex: 1; }
+  .saldo-actions {
+    width: 100%;
+  }
 
-  dialog { width: calc(100vw - 40px); }
+  .saldo-actions button {
+    flex: 1;
+  }
+
+  dialog {
+    width: calc(100vw - 40px);
+  }
 }
 
 .toast {
@@ -459,8 +507,8 @@ dialog:not(#toast) {
   font-family: 'Poppins', sans-serif;
   font-size: .85rem;
   font-weight: 500;
-  border: 1px solid rgba(254,253,234,0.15);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  border: 1px solid rgba(254, 253, 234, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   opacity: 0;
   transform: translateY(16px);
   pointer-events: none;
@@ -473,10 +521,100 @@ dialog:not(#toast) {
   pointer-events: auto;
 }
 
-.toast.success { border-left: 4px solid #4ade80; }
-.toast.error   { border-left: 4px solid #f87171; }
+#filtro-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--cream-dim);
+  padding: 10px;
+  border-radius: 100%;
+  margin: 20px 0;
+  color: var(--cream);
+  background-color: rgba(254, 253, 234, 0.02);
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+}
 
-.toast-icon { font-size: 1rem; }
+#filtro-button:hover {
+  transform: scale(1.15);
+  -webkit-box-shadow: 0px 0px 50px -15px var(--cream);
+  box-shadow: 0px 0px 50px -15px var(--cream);
+}
+
+.action-group{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.edit-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--cream-dim);
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  margin: 20px 0;
+  color: var(--cream);
+  background-color: rgba(254, 253, 234, 0.02);
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  z-index: 1000;
+}
+
+.delete-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--cream-dim);
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  margin: 20px 0;
+  color: var(--cream);
+  background-color: rgba(254, 253, 234, 0.02);
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+}
+
+.edit-button:hover{
+  transform: scale(1.2);
+}
+
+.delete-button:hover{
+  transform: scale(1.2);
+}
+
+.toast.success {
+  border-left: 4px solid #4ade80;
+}
+
+.toast.error {
+  border-left: 4px solid #f87171;
+}
+
+.toast-icon {
+  font-size: 1rem;
+}
+
+#sair-conta {
+  background-color: #00000000;
+  border: 1px solid var(--cream-mid);
+  border-radius: 15px;
+  padding: 5px 20px;
+  color: var(--cream-mid);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+#sair-conta:hover {
+  background-color: var(--cream);
+  border: none;
+  color: var(--black);
+}
 
 .saldo-list {
   list-style: none;
@@ -492,14 +630,14 @@ dialog:not(#toast) {
   padding: 16px 20px;
   border: 1px solid var(--cream-dim);
   border-radius: 14px;
-  background: rgba(254,253,234,0.02);
+  background: rgba(254, 253, 234, 0.02);
   font-size: .85rem;
   transition: border-color .2s, background .2s;
 }
 
 .saldo-list li:hover {
-  border-color: rgba(254,253,234,0.22);
-  background: rgba(254,253,234,0.04);
+  border-color: rgba(254, 253, 234, 0.22);
+  background: rgba(254, 253, 234, 0.04);
 }
 
 .saldo-item {
@@ -517,7 +655,8 @@ dialog:not(#toast) {
 .saldo-valor {
   font-weight: 600;
   font-size: .95rem;
-  color: var(--green); /* verde para receita, diferente do vermelho do gasto */
+  color: var(--green);
+  /* verde para receita, diferente do vermelho do gasto */
 }
 
 .saldo-data {
@@ -527,43 +666,45 @@ dialog:not(#toast) {
 }
 
 .dashboard-panel {
-    border: 1px solid var(--cream-dim);
-    border-radius: 20px;
-    padding: 24px;
-    margin-bottom: 32px;
-    background: rgba(254,253,234,0.02);
+  border: 1px solid var(--cream-dim);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 32px;
+  background: rgba(254, 253, 234, 0.02);
 }
 
 .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .dash-card {
-    background: rgba(254,253,234,0.04);
-    border: 1px solid var(--cream-dim);
-    border-radius: 14px;
-    padding: 20px 24px;
+  background: rgba(254, 253, 234, 0.04);
+  border: 1px solid var(--cream-dim);
+  border-radius: 14px;
+  padding: 20px 24px;
 }
 
 .dash-card-label {
-    font-size: .65rem;
-    font-weight: 600;
-    letter-spacing: 2px;
-    color: var(--cream-mid);
-    margin-bottom: 10px;
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--cream-mid);
+  margin-bottom: 10px;
 }
 
 .dash-card-value {
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-    color: var(--cream);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--cream);
 }
 
-.dash-card-value.red { color: var(--red); }
+.dash-card-value.red {
+  color: var(--red);
+}
 
 @media (max-width: 640px) {
     .cards-grid { grid-template-columns: 1fr; }

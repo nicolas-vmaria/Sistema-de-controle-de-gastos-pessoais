@@ -10,7 +10,7 @@ const closeButtons = document.querySelectorAll('.close-modal');
 const selectElement = document.getElementById('categoriaGastos');
 const selectElementFiltro = document.getElementById('selected-Categoria');
 const gastosTotaisElement = document.getElementById("gastos-totais")
-const userLogado = JSON.parse(localStorage.getItem('usuarioLogado')); 
+const userLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
 const nameElement = document.getElementById('nameUser');
 const sairButton = document.getElementById('sair-conta');
 const nomeGastos = document.getElementById('nomeGasto');
@@ -48,17 +48,17 @@ let categorias = [
     "Outros"
 ];
 
-function salvarNoStorage(chave, valor){
+function salvarNoStorage(chave, valor) {
     localStorage.setItem(chave, JSON.stringify(valor));
 }
 
-function pegarDoStorage(chave){
+function pegarDoStorage(chave) {
     return JSON.parse(localStorage.getItem(chave));
 }
 
-function atualizarUsuario(){
+function atualizarUsuario() {
     let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-    
+
     usuarioLogado.saldo = salario;
     usuarioLogado.gastosTotais = gastosTotais;
     usuarioLogado.gastosArray = gastosArray;
@@ -70,7 +70,7 @@ function atualizarUsuario(){
     let index = users.findIndex(user => user.email === usuarioLogado.email);
     users[index] = usuarioLogado;
     salvarNoStorage('users', users);
-}   
+}
 
 function init() {
     if (userLogado) {
@@ -139,11 +139,11 @@ categorias.forEach(categoria => {
     option.textContent = categoria;
     selectElement.appendChild(option);
     selectElementFiltro.appendChild(option.cloneNode(true));
-}); 
+});
 
 openButtons.forEach(button => {
     button.addEventListener('click', () => {
-        
+
         const modalId = button.getAttribute('data-modal');
 
         const modal = document.getElementById(modalId);
@@ -162,21 +162,21 @@ closeButtons.forEach(button => {
         limparModal2();
         limparModal1();
 
-        if(modalId === 'modal-3'){
+        if (modalId === 'modal-3') {
             limparModal3();
         }
-        
+
     });
 });
 
-async function adicionarSaldo(valor){
+async function adicionarSaldo(valor) {
 
     let resposta = await showConfirm("Deseja adicionar esse valor ao saldo?");
 
-    if(resposta){
+    if (resposta) {
         salario += valor;
         return true;
-    }else {
+    } else {
         showToast("Valor não adicionado ao saldo.", 'error');
         return false;
     }
@@ -184,20 +184,20 @@ async function adicionarSaldo(valor){
 
 receitaUserSelect.addEventListener('change', () => {
     let tipo = receitaUserSelect.value;
-    
-    if(tipo === ''){
+
+    if (tipo === '') {
         showToast("Selecione um tipo de receita para adicionar ao saldo.", 'error');
         return false;
-    }else if(tipo === 'salario'){
+    } else if (tipo === 'salario') {
         salarioInput.placeholder = "Digite o valor do salário";
         document.getElementById('outro-receita-group').style.display = "none";
     }
-    else if(tipo === 'outro'){
+    else if (tipo === 'outro') {
         document.getElementById('outro-receita-group').style.display = "block";
         salarioInput.placeholder = "Digite o valor da receita";
     }
 })
-    
+
 
 btnSalario.addEventListener('click', async () => {
     const valor = parseFloat(salarioInput.value);
@@ -210,47 +210,48 @@ btnSalario.addEventListener('click', async () => {
     if (isNaN(valor)) {
         showToast('Por favor, insira um número válido.', 'error');
         return false;
-    }else if(valor <= 0){
+    } else if (valor <= 0) {
         showToast('Por favor, insira um valor maior que zero.', 'error');
         return false;
-    }else if(nomeReceitaInput.value === '' && receitaUserSelect.value === 'outro'){
+    } else if (nomeReceitaInput.value === '' && receitaUserSelect.value === 'outro') {
         showToast('Digite um nome para a receita.', 'error');
         return false;
-    }else if(dataSaldoInput.value === ''){
+    } else if (dataSaldoInput.value === '') {
         showToast('Selecione uma data para o saldo.', 'error');
         return false;
-    }else if(dataSaldo > dataAtual){
+    } else if (dataSaldo > dataAtual) {
         showToast('A data do saldo não pode ser no futuro.', 'error');
         return false;
     }
 
     let sucesso = await adicionarSaldo(valor);
-    if(sucesso){
-            showToast("Saldo atualizado com sucesso!", 'success');
-            saldoArray.push({
-                nome: tipo === 'salario' ? 'Salário' : nomeReceita, 
-                valor: valor, 
-                data: dataSaldo})
-            modal1.close();
-            limparModal1();
-            atualizarUsuario();
-            renderSaldoEGastos();
-            saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }
+    if (sucesso) {
+        showToast("Saldo atualizado com sucesso!", 'success');
+        saldoArray.push({
+            nome: tipo === 'salario' ? 'Salário' : nomeReceita,
+            valor: valor,
+            data: dataSaldo
+        })
+        modal1.close();
+        limparModal1();
+        atualizarUsuario();
+        renderSaldoEGastos();
+        saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
 });
 
 
-function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null){
+function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null) {
     combinedArray = [];
     listElementTransacoes.innerHTML = '';
 
-    let gastos = filtro === 'gasto' && arrayFiltrado ? arrayFiltrado : 
-                 filtro === 'saldo' ? [] :  // esconde gastos se filtro for saldo
-                 gastosArray;
+    let gastos = filtro === 'gasto' && arrayFiltrado ? arrayFiltrado :
+        filtro === 'saldo' ? [] :  // esconde gastos se filtro for saldo
+            gastosArray;
 
     let saldos = filtro === 'saldo' && arrayFiltrado ? arrayFiltrado :
-                 filtro === 'gasto' ? [] :  // esconde saldos se filtro for gasto
-                 saldoArray;
+        filtro === 'gasto' ? [] :  // esconde saldos se filtro for gasto
+            saldoArray;
 
     gastos.forEach(gasto => {
         combinedArray.push({
@@ -268,7 +269,7 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null){
 
     combinedArray.sort((a, b) => new Date(b.data) - new Date(a.data));
 
-    if(combinedArray.length === 0){
+    if (combinedArray.length === 0) {
         listElementTransacoes.innerHTML = '<li class="empty-state" id="empty-state">Nenhum valor registrada ainda.</li>';
         return;
     }
@@ -277,82 +278,110 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null){
         let liElement = document.createElement("li")
         let dateformatada = new Date(item.data + "T00:00:00").toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-        if(item.tipo === 'gasto'){
+        if (item.tipo === 'gasto') {
             liElement.innerHTML = `
                 <div class="gasto-left">
                     <span class="gasto-nome">${item.nome}</span>
                     <span class="gasto-valor">- R$ ${item.valor}</span>
                     <span class="gasto-meta">${dateformatada}</span>
                 </div>
+
+                <div class="action-group">
+                    <button class="edit-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
+                    <button class="delete-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
                     <span class="gasto-cat">${item.categoria}</span>
+                </div>
             `;
-        }else {
+
+            liElement.querySelector('.edit-button').addEventListener('click', () => {
+                alert('editar', item)
+            });
+    
+            liElement.querySelector('.delete-button').addEventListener('click', () => {
+                alert('deletar', item)
+            });
+        } else {
             liElement.innerHTML = `
                 <div class="saldo-item">
                     <span class="saldo-nome">${item.nome}</span>
                     <span class="saldo-valor">+ R$ ${item.valor}</span>
                     <span class="saldo-data">${dateformatada}</span>
                 </div>
-            `;
-        }   
 
-        
+                <div class="action-group">
+                    <button class="edit-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
+                    <button class="delete-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
+                    <span class="gasto-cat">Receita</span>
+                </div>
+            `;
+
+            liElement.querySelector('.edit-button').addEventListener('click', () => {
+                alert('editar', item)
+            });
+    
+            liElement.querySelector('.delete-button').addEventListener('click', () => {
+                alert('deletar', item)
+            });
+        }
+
+
         listElementTransacoes.appendChild(liElement)
     });
 }
 
-async function adicionarGastos(){
+async function adicionarGastos() {
     let newGastos = parseFloat(inputGastos.value);
     let dataGastos = document.getElementById('dataGastos').value;
     let dataAtual = new Date().toISOString().split('T')[0];
     let saldofuturo = salario - newGastos;
     let categoriaGastos = document.getElementById('categoriaGastos').value;
 
-    if(nomeGastos.value === ''){
+    if (nomeGastos.value === '') {
         showToast("Digite um nome para o gasto.", 'error');
         return false;
-    }else if(inputGastos.value === ''){
+    } else if (inputGastos.value === '') {
         showToast("Digite uma quantia para adicionar aos gastos.", 'error');
         return false;
-    } else if(isNaN(newGastos)){
+    } else if (isNaN(newGastos)) {
         showToast("Digite um número válido para os gastos.", 'error');
         return false;
-    }else if(dataGastos === ''){
+    } else if (dataGastos === '') {
         showToast("Selecione uma data para o gasto.", 'error');
         return false;
-    }else if(dataGastos > dataAtual){
+    } else if (dataGastos > dataAtual) {
         showToast("A data do gasto não pode ser no futuro.", 'error');
         return false;
     }
-    
-    else if(categoriaGastos === 'Selecione uma opção' || categoriaGastos === ''){
+
+    else if (categoriaGastos === 'Selecione uma opção' || categoriaGastos === '') {
         showToast("Selecione uma categoria para o gasto.", 'error');
         return false;
     }
 
 
-    if(saldofuturo <= 0){
+    if (saldofuturo <= 0) {
         let resposta = await showConfirm("Atenção: Seus gastos excederam seu salário! Deseja continuar adicionando esse gasto?");
-        if(resposta){
+        if (resposta) {
             salario -= newGastos;
             gastosTotais += newGastos;
             showToast("Seu saldo está negativo! Considere revisar seus gastos.", 'error');
-        }else{
+        } else {
             showToast("Gasto não adicionado.", 'error');
             modal2.close();
             limparModal2();
             return false;
         }
-    }else{
+    } else {
         showToast("Gasto adicionado com sucesso!", 'success');
         salario -= newGastos;
         gastosTotais += newGastos;
-        
+
     }
 
-    gastosArray.push({nome: nomeGastos.value, 
-        valor: newGastos, 
-        data: dataGastos, 
+    gastosArray.push({
+        nome: nomeGastos.value,
+        valor: newGastos,
+        data: dataGastos,
         categoria: categoriaGastos
     });
 
@@ -360,16 +389,16 @@ async function adicionarGastos(){
     limparModal2();
     atualizarUsuario();
     renderSaldoEGastos();
-    atualizarGrafico(); 
-    saldo.textContent = salario.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
-    gastosTotaisElement.textContent = gastosTotais.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
-    
+    atualizarGrafico();
+    saldo.textContent = salario.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+    gastosTotaisElement.textContent = gastosTotais.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+
 }
 
 gastosButton.addEventListener('click', adicionarGastos);
 
 
-function mostrarFiltro(){
+function mostrarFiltro() {
     let tipoTransacao = document.getElementById("tipoTransacao").value;
     let tipoFiltro = document.getElementById("tipofiltro").value;
 
@@ -378,33 +407,34 @@ function mostrarFiltro(){
     document.getElementById("filtro-data").style.display = "none";
     document.getElementById("filtro-valor").style.display = "none";
 
-    if(tipoTransacao === 'gasto'){
+    if (tipoTransacao === 'gasto') {
         document.getElementById("filtro-group").style.display = "block";
         document.getElementById("filtro-data-saldo").style.display = "none";
         if(tipoFiltro !== ""){
            document.getElementById(`filtro-${tipoFiltro}`).style.display = "block";
         }
-    }else if(tipoTransacao === 'saldo'){
+    } else if (tipoTransacao === 'saldo') {
         document.getElementById("filtro-data-saldo").style.display = "block";
-}};
+    }
+};
 document.getElementById("tipofiltro").addEventListener("change", mostrarFiltro);
 document.getElementById("tipoTransacao").addEventListener("change", mostrarFiltro);
 
-function filtroTransacoes(tipoFiltro, tipoTransacao){
+function filtroTransacoes(tipoFiltro, tipoTransacao) {
 
-    if(tipoTransacao === ''){
+    if (tipoTransacao === '') {
         showToast("Selecione um tipo de transação para aplicar o filtro.", 'error');
         return;
     }
 
-    if(tipoTransacao === "saldo"){
+    if (tipoTransacao === "saldo") {
         let inicio = document.getElementById("dataInicialSaldo").value;
         let fim = document.getElementById("dataFinalSaldo").value;
 
-        if(inicio === '' || fim === ''){
+        if (inicio === '' || fim === '') {
             showToast("Selecione datas válidas para o filtro de data.", 'error');
             return;
-        }else if(inicio > fim){
+        } else if (inicio > fim) {
             showToast("A data inicial não pode ser maior que a data final.", 'error');
             return;
         }
@@ -415,46 +445,46 @@ function filtroTransacoes(tipoFiltro, tipoTransacao){
         return;
     }
 
-    if(tipoTransacao === 'gasto' && (tipoFiltro === "" || tipoFiltro === "Selecione uma opção")){
+    if (tipoTransacao === 'gasto' && (tipoFiltro === "" || tipoFiltro === "Selecione uma opção")) {
         showToast("Selecione um tipo de transação e um filtro para aplicar.", 'error');
         return;
     }
 
-    if(tipoFiltro === "categoria"){
+    if (tipoFiltro === "categoria") {
         let categoria = document.getElementById("selected-Categoria").value;
-        if(categoria === '' || categoria === 'Selecione uma opção'){
+        if (categoria === '' || categoria === 'Selecione uma opção') {
             showToast("Selecione uma categoria para filtrar.", 'error');
             return;
         }
 
         renderSaldoEGastos("gasto", gastosArray.filter(gasto => gasto.categoria === categoria));
-    } else if(tipoFiltro === "valor"){
+    } else if (tipoFiltro === "valor") {
         let min = parseFloat(document.getElementById("filtroMin").value) || 0;
         let max = parseFloat(document.getElementById("filtroMax").value) || 0;
 
-        if(isNaN(min) || isNaN(max)){
+        if (isNaN(min) || isNaN(max)) {
             showToast("Digite valores numéricos válidos para o filtro de valor.", 'error');
             return;
-        }else if(min > max){
+        } else if (min > max) {
             showToast("O valor mínimo não pode ser maior que o valor máximo.", 'error');
             return;
-        }else if(min === 0 && max === 0){
+        } else if (min === 0 && max === 0) {
             showToast("Digite pelo menos um valor para o filtro de valor.", 'error');
             return;
         }
 
         renderSaldoEGastos("gasto", gastosArray.filter(gasto => gasto.valor >= min && gasto.valor <= max));
-    }else if(tipoFiltro === "data"){
+    } else if (tipoFiltro === "data") {
         let inicio = document.getElementById("dataInicial").value;
         let fim = document.getElementById("dataFinal").value;
 
-        if(inicio === '' || fim === ''){
+        if (inicio === '' || fim === '') {
             showToast("Selecione datas válidas para o filtro de data.", 'error');
             return;
-        }else if(inicio > fim){
+        } else if (inicio > fim) {
             showToast("A data inicial não pode ser maior que a data final.", 'error');
             return;
-        }else if(inicio === fim){
+        } else if (inicio === fim) {
             showToast("A data inicial e a data final não podem ser iguais para o filtro de data.", 'error');
             return;
         }
@@ -467,11 +497,11 @@ function filtroTransacoes(tipoFiltro, tipoTransacao){
 }
 document.getElementById("btnFiltro").addEventListener("click", () => filtroTransacoes(document.getElementById("tipofiltro").value, document.getElementById("tipoTransacao").value));
 
-function limparFiltro(){   
+function limparFiltro() {
     limparModal3();
     document.getElementById("limparFiltroDiv").style.display = "none";
     renderSaldoEGastos();
-    
+
 }
 document.getElementById("limparFiltro").addEventListener("click", limparFiltro);
 
