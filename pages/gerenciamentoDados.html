@@ -51,23 +51,31 @@
         </div>
 
         <div class="dashboard-panel">
-    <div class="cards-grid">
-        <div class="dash-card">
-            <div class="dash-card-label" id="gastos-cat-label">GASTOS</div>
-            <div class="dash-card-value red" id="gastos-totais-filtro">R$ 0,00</div>
+            <div class="cards-grid">
+                <div class="dash-card">
+                    <div class="dash-card-label" id="gastos-cat-label">GASTOS</div>
+                    <div class="dash-card-value red" id="gastos-totais-filtro">R$ 0,00</div>
+                </div>
+                <div class="dash-card">
+                    <div class="dash-card-label" id="saldo-label">SALDO</div>
+                    <div class="dash-card-value" id="saldo-filtro">R$ 0,00</div>
+                </div>
+            </div>
+        
+            <!-- Navegação de mês -->
+            <div class="grafico-nav">
+                <button id="btn-mes-anterior">&#8592;</button>
+                <span id="label-mes-atual">—</span>
+                <button id="btn-mes-proximo">&#8594;</button>
+            </div>
+        
+            <div style="position: relative; width: 100%; height: 200px;">
+                <canvas id="meuGrafico"></canvas>
+            </div>
         </div>
-        <div class="dash-card">
-    <div class="dash-card-label" id="saldo-label">SALDO</div>
-    <div class="dash-card-value" id="saldo-filtro">R$ 0,00</div>
-</div>
-    </div>
-    <div style="position: relative; width: 100%; height: 200px;">
-        <canvas id="meuGrafico"></canvas>
-    </div>
-</div>
 
         <!-- Gastos -->
-        <div class="gastos-section" id="gastos-container">
+        <div class="gastos-section" id="gastos-container">''
             
             <div class="section-heading">Suas Transações</div>
             <button class="open-modal" data-modal="modal-3">Filtro</button>

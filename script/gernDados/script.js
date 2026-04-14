@@ -21,8 +21,8 @@ const ctx = document.getElementById('meuGrafico').getContext('2d');
 let modal1 = document.getElementById('modal-1');
 let modal2 = document.getElementById('modal-2');
 let modal3 = document.getElementById('modal-3');
-let categoriasFiltradas = [];
-let valoresPorCategoria = [];
+let nivelAtual = "mes";
+let mesSelecionado = null;
 let salario = 0;    
 let gastosTotais = 0;
 let meuGrafico = null;
@@ -79,8 +79,12 @@ function init() {
         gastosTotais = userLogado.gastosTotais || 0;
         gastosArray = userLogado.gastosArray || [];
         saldoArray = userLogado.saldoArray || [];
+
+        const meses = getMesesDisponiveis()
+        if (meses.length > 0) {
+            mesSelecionado = meses[meses.length - 1];
+        }
         saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        
         gastosTotaisElement.textContent = gastosTotais.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
         renderSaldoEGastos();
         renderGrafico();
@@ -376,6 +380,7 @@ function mostrarFiltro(){
 
     if(tipoTransacao === 'gasto'){
         document.getElementById("filtro-group").style.display = "block";
+        document.getElementById("filtro-data-saldo").style.display = "none";
         if(tipoFiltro !== ""){
            document.getElementById(`filtro-${tipoFiltro}`).style.display = "block";
         }
@@ -472,108 +477,188 @@ document.getElementById("limparFiltro").addEventListener("click", limparFiltro);
 
 
 
-function atualizarGrafico() {
+function getMesLabel(mesKey) {
+    const [ano, mes] = mesKey.split('-');
+    const nomes = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                   'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    return `${nomes[parseInt(mes) - 1]} ${ano}`;
+}
 
-        categoriasFiltradas = categorias.filter(cat =>
-        gastosArray.some(gasto => gasto.categoria === cat)
-        )
+function getMesesDisponiveis() {
+    const meses = new Set();
+    gastosArray.forEach(g => meses.add(g.data.slice(0, 7)));
+    saldoArray.forEach(s => meses.add(s.data.slice(0, 7)));
+    return [...meses].sort();
+}
 
-        valoresPorCategoria = categoriasFiltradas.map(categoria => {
-        return gastosArray
-            .filter(gasto => gasto.categoria === categoria)
-            .reduce((total, gasto) => total + Number(gasto.valor), 0);
-    });
+function agruparGastosPorDia(mesKey) {
+    const mapa = {};
+    gastosArray
+        .filter(g => g.data.startsWith(mesKey))
+        .forEach(g => {
+            const dia = g.data.slice(8, 10);
+            mapa[dia] = (mapa[dia] || 0) + Number(g.valor);
+        });
+    return mapa;
+}
 
-    const coresGastos = valoresPorCategoria.map((valor, index) =>{
-                const opacity = 0.2 + (index / valoresPorCategoria.length) * 0.7;
-                return `rgba(254, 253, 234, ${opacity})`;
-            })
+function agruparSaldosPorDia(mesKey) {
+    const mapa = {};
+    saldoArray
+        .filter(s => s.data.startsWith(mesKey))
+        .forEach(s => {
+            const dia = s.data.slice(8, 10);
+            mapa[dia] = (mapa[dia] || 0) + Number(s.valor);
+        });
+    return mapa;
+}
 
-    meuGrafico.data.labels = categoriasFiltradas;
-    meuGrafico.data.datasets[0].data = valoresPorCategoria;
-    meuGrafico.data.datasets[0].backgroundColor = coresGastos;
+function renderizarMesAtual() {
+    const meses = getMesesDisponiveis();
+    if (meses.length === 0) {
+        if(meuGrafico) {
+            meuGrafico.data.labels = [];
+            meuGrafico.data.datasets.forEach(ds => ds.data = []);
+            meuGrafico.update();
+        }
+        document.getElementById('label-mes-atual').textContent = "Sem dados";
+        return;
+    }
+
+    
+    if (mesSelecionado === null || !meses.includes(mesSelecionado)) {
+        mesSelecionado = meses[meses.length - 1];
+    }
+
+    const gastosDia = agruparGastosPorDia(mesSelecionado);
+    const saldosDia = agruparSaldosPorDia(mesSelecionado);
+
+    
+    const diasSet = new Set([...Object.keys(gastosDia), ...Object.keys(saldosDia)]);
+    const dias = [...diasSet].sort();
+
+    const valoresGastos = dias.map(d => gastosDia[d] || 0);
+    const valoresSaldos = dias.map(d => saldosDia[d] || 0);
+
+    meuGrafico.data.labels = dias.map(d => `Dia ${d}`);
+    meuGrafico.data.datasets[0].data = valoresGastos;
+    meuGrafico.data.datasets[1].data = valoresSaldos;
     meuGrafico.update();
+
+    document.getElementById('label-mes-atual').textContent = getMesLabel(mesSelecionado);
+
+    // Botões de navegação
+    const idx = meses.indexOf(mesSelecionado);
+    document.getElementById('btn-mes-anterior').disabled = idx === 0;
+    document.getElementById('btn-mes-proximo').disabled = idx === meses.length - 1;
 }
 
 
-function renderGrafico(){
-    categoriasFiltradas = categorias.filter(cat =>
-    gastosArray.some(gasto => gasto.categoria === cat)
-    )
+function renderGrafico() {
+    meuGrafico = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Gastos',
+                    data: [],
+                    backgroundColor: 'rgba(220, 80, 80, 0.7)',
+                    borderRadius: 6,
+                    borderWidth: 0,
+                    borderSkipped: false,
+                },
+                {
+                    label: 'Saldo',
+                    data: [],
+                    backgroundColor: 'rgba(80, 200, 120, 0.7)',
+                    borderRadius: 6,
+                    borderWidth: 0,
+                    borderSkipped: false,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            onHover: (event, elements) => {
+                event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+                const saldoElement = document.getElementById('gastos-totais-filtro');
+                
 
-    valoresPorCategoria = categoriasFiltradas.map(categoria => {
-        return gastosArray
-        .filter(gasto => gasto.categoria === categoria)
-        .reduce((total, gasto) => total + Number(gasto.valor), 0);
+                if (elements.length > 0) {
+                    const el = elements[0];
+                    const label = meuGrafico.data.labels[el.index];
+                    const dsLabel = meuGrafico.data.datasets[el.datasetIndex].label;
+                    const valor = meuGrafico.data.datasets[el.datasetIndex].data[el.index];
+                    const datasetIndex = el.datasetIndex
+
+                    if (datasetIndex === 1) {
+                        saldoElement.classList.add('verde-destaque');
+                    } else {
+                        saldoElement.classList.remove('verde-destaque');
+                    }
+
+                    document.getElementById("gastos-totais-filtro").textContent =
+                        valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+                    document.getElementById('gastos-cat-label').textContent =
+                        `${dsLabel.toUpperCase()} — ${label.toUpperCase()}`;
+
+                    document.getElementById("saldo-filtro").textContent =
+                        salario.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+                    document.getElementById('saldo-label').textContent = 'SALDO ATUAL';
+                } else {
+                    saldoElement.classList.remove('verde-destaque');
+                    document.getElementById("gastos-totais-filtro").textContent =
+                        gastosTotais.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+                    document.getElementById('gastos-cat-label').textContent = 'GASTOS';
+                    document.getElementById("saldo-label").textContent = "SALDO";
+                    document.getElementById("saldo-filtro").textContent =
+                        salario.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+                }
+            },
+            plugins: {
+                legend: { display: true },
+                tooltip: { enabled: false },
+            },
+            scales: {
+                x: {
+                    display: true,
+                    ticks: {
+                        color: 'rgba(254,253,234,0.5)',
+                        font: { family: 'Poppins', size: 12 },
+                        maxRotation: 45
+                    },
+                    grid: { display: false },
+                    border: { display: false }
+                },
+                y: { display: false }
+            }
+        }
     });
 
-    const coresGastos = valoresPorCategoria.map((_, index) =>{
-                const opacity = 0.2 + (index / valoresPorCategoria.length) * 0.7;
-                return `rgba(254, 253, 234, ${opacity})`;
-            })
-
-    meuGrafico = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: categoriasFiltradas,
-        datasets: [
-            {
-                label: 'Gastos',
-                data: valoresPorCategoria,
-                backgroundColor: coresGastos,
-                borderRadius: 6,
-                borderWidth: 0,
-                borderSkipped: false,
-            },
-
-            
-        ]
-     },
-
-     options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        onHover: (event, elements) => {
-            if(elements.length > 0){
-             let index = elements[0].index;
-             let categoria = categoriasFiltradas[index];
-             let valorCategoria = valoresPorCategoria[index];
-
-                document.getElementById("gastos-totais-filtro").textContent =
-                    valorCategoria.toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
-                document.getElementById('gastos-cat-label').textContent = categoria.toUpperCase();
-
-                console.log(salario)
-                let saldoSemCategoria = salario + valorCategoria
-                document.getElementById("saldo-filtro").textContent = saldoSemCategoria.toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
-                document.getElementById('saldo-label').textContent = 'SALDO SEM ' + categoria.toUpperCase();
-            } else {
-                document.getElementById("gastos-totais-filtro").textContent = gastosTotais.toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
-                document.getElementById('gastos-cat-label').textContent = 'GASTOS';
-            }
-        },
-        plugins: {
-            legend: {display: false},
-        tooltip: {
-            enabled: false},
-        },
-
-scales: {
-        x: {display: true,
-            ticks: {
-                color: 'rgba(254,253,234,0.5)',
-                font: { familly: 'Poppins', size: 15 },
-                maxRotation: 45
-        },
-        grid: {display: false},
-        border : {display: false}
-    },
-        y: {display: false}
-     }
-
-     
-}});
-
-   
+    renderizarMesAtual();
 }
+
+function atualizarGrafico() {
+    renderizarMesAtual();
+}
+
+document.getElementById('btn-mes-anterior').addEventListener('click', () => {
+    const meses = getMesesDisponiveis();
+    const idx = meses.indexOf(mesSelecionado);
+    if (idx > 0) {
+        mesSelecionado = meses[idx - 1];
+        renderizarMesAtual();
+    }
+});
+
+document.getElementById('btn-mes-proximo').addEventListener('click', () => {
+    const meses = getMesesDisponiveis();
+    const idx = meses.indexOf(mesSelecionado);
+    if (idx < meses.length - 1) {
+        mesSelecionado = meses[idx + 1];
+        renderizarMesAtual();
+    }
+});
 
