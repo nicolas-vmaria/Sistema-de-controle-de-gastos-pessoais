@@ -23,6 +23,8 @@ const buttonGraficoClose = document.getElementById('fechar-grafico');
 let modal1 = document.getElementById('modal-1');
 let modal2 = document.getElementById('modal-2');
 let modal3 = document.getElementById('modal-3');
+let editandoIndex = null;
+let editandoTipo = null;
 let nivelAtual = "mes";
 let mesSelecionado = null;
 let salario = 0;
@@ -202,6 +204,9 @@ receitaUserSelect.addEventListener('change', () => {
 
 
 btnSalario.addEventListener('click', async () => {
+    if(editandoIndex !== null && editandoTipo === 'saldo') {
+        salvarEdicaoSaldo();
+    }else{
     const valor = parseFloat(salarioInput.value);
     let tipo = receitaUserSelect.value;
     let nomeReceita = nomeReceitaInput.value.trim();
@@ -239,7 +244,7 @@ btnSalario.addEventListener('click', async () => {
         atualizarUsuario();
         renderSaldoEGastos();
         saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    }
+    }}
 });
 
 
@@ -248,23 +253,26 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null) {
     listElementTransacoes.innerHTML = '';
 
     let gastos = filtro === 'gasto' && arrayFiltrado ? arrayFiltrado :
-        filtro === 'saldo' ? [] :  // esconde gastos se filtro for saldo
+        filtro === 'saldo' ? [] : 
             gastosArray;
 
     let saldos = filtro === 'saldo' && arrayFiltrado ? arrayFiltrado :
-        filtro === 'gasto' ? [] :  // esconde saldos se filtro for gasto
+        filtro === 'gasto' ? [] :  
             saldoArray;
 
-    gastos.forEach(gasto => {
+    gastos.forEach((gasto, index) => {
         combinedArray.push({
             tipo: 'gasto',
+            indexReal: index,
             ...gasto
         });
     });
 
-    saldos.forEach(saldo => {
+    saldos.forEach((saldo, index)=> {
         combinedArray.push({
             tipo: 'saldo',
+            indexReal: index,
+            
             ...saldo
         });
     });
@@ -276,7 +284,7 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null) {
         return;
     }
 
-    combinedArray.forEach(item => {
+    combinedArray.forEach((item, index)=> {
         let liElement = document.createElement("li")
         let dateformatada = new Date(item.data + "T00:00:00").toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
@@ -289,7 +297,7 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null) {
                 </div>
 
                 <div class="action-group">
-                    <button class="edit-button open-modal" data-modal="modal-2"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
+                    <button class="edit-button" data-modal="modal-2" data-index="${item.indexReal}" data-tipo="gasto"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
                     <button class="delete-button" data-modal="modal-2"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
                     <span class="gasto-cat">${item.categoria}</span>
                 </div>
@@ -304,8 +312,9 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null) {
                 </div>
 
                 <div class="action-group">
-                    <button class="edit-button open-modal" id="edit-button" data-modal="modal-1"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
-                    <button class="delete-button" id="delete-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
+                   <button class="edit-button" data-modal="modal-1" data-index="${item.indexReal}" data-tipo="saldo"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
+
+                    <button class="delete-button" id="delete-button" data-index="${item.indexReal} data-tipo="saldo"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
                     <span class="gasto-cat">Receita</span>
                 </div>
             `;
@@ -384,7 +393,14 @@ async function adicionarGastos() {
 
 }
 
-gastosButton.addEventListener('click', adicionarGastos);
+gastosButton.addEventListener('click', () => {
+    if (editandoIndex !== null && editandoTipo === 'gasto') {
+        salvarEdicaoGasto();
+    } else {
+        adicionarGastos();
+    }
+});
+
 
 
 function mostrarFiltro() {
@@ -763,26 +779,137 @@ listElementTransacoes.addEventListener('click', (event) => {
     const deleteBtn = event.target.closest('.delete-button');
 
     if (editBtn) {
-        console.log("Clicou em editar");
+        const index = parseInt(editBtn.getAttribute('data-index'));
+        const tipo = editBtn.getAttribute('data-tipo');
+
+        const item = tipo === 'gasto' ? gastosArray[index] : saldoArray[index];
         const modalId = editBtn.getAttribute('data-modal');
+
         if (modalId) {
             document.getElementById(modalId).showModal();
         }
 
-        let index = gastosArray.indexOf();
-
-        editarGasto(index);
-
-
+        editarGasto(item, index, tipo);
     }
 
     if (deleteBtn) {
-        return
+        const index = parseInt(deleteBtn.getAttribute('data-index'));
+        const tipo = deleteBtn.getAttribute('data-tipo');
+
+        let resposta = showConfirm("Tem certeza que deseja excluir esta transação?");
+
+        if (resposta) {
+            if (tipo === 'gasto') {
+                const gastoRemovido = gastosArray.splice(index, 1)[0];
+                salario += gastoRemovido.valor;
+                gastosTotais -= gastoRemovido.valor;
+            } else {
+                const saldoRemovido = saldoArray.splice(index, 1)[0];
+                salario -= saldoRemovido.valor;
+            }
+
+            atualizarUsuario();
+            renderSaldoEGastos();
+            atualizarGrafico();
+            saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            gastosTotaisElement.textContent = gastosTotais.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            showToast("Transação excluída com sucesso!", 'success');
+        } else {            
+            showToast("Transação não excluída.", 'error');
+        }
     }
 });
 
-function editarGasto(index) {
-    document.getElementById('modal-2').showModal();
-    nomeGastos.value = nomeGastos.value[0];
-    document.getElementById('btnSalario').textContent = 'Salvar alteração';
+function editarGasto(item, index, tipo) {
+    editandoIndex = index;
+    editandoTipo = tipo;
+
+    if (tipo === 'gasto') {
+        nomeGastos.value = item.nome;
+        inputGastos.value = item.valor;
+        document.getElementById('dataGastos').value = item.data;
+        document.getElementById('categoriaGastos').value = item.categoria;
+        document.getElementById('btnGasto').textContent = 'Salvar alteração';
+    } else {
+        receitaUserSelect.value = item.nome === 'Salário' ? 'salario' : 'outro';
+        if (item.nome !== 'Salário') {
+            nomeReceitaInput.value = item.nome;
+            document.getElementById('outro-receita-group').style.display = 'block';
+        }
+        dataSaldoInput.value = item.data;
+        salarioInput.value = item.valor;
+        document.getElementById('btnSalario').textContent = 'Salvar alteração';
+    }
 }
+
+    function salvarEdicaoGasto() {
+        const novoNome = nomeGastos.value.trim();
+        const novoValor = parseFloat(inputGastos.value);
+        const novaData = document.getElementById('dataGastos').value;
+        const novaCategoria = document.getElementById('categoriaGastos').value;
+    
+        if (!novoNome || isNaN(novoValor) || !novaData || novaCategoria === 'Selecione uma opção') {
+            showToast('Preencha todos os campos.', 'error');
+            return;
+        }
+    
+        const valorAntigo = gastosArray[editandoIndex].valor;
+        salario += valorAntigo;       
+        salario -= novoValor;         
+        gastosTotais -= valorAntigo;  
+        gastosTotais += novoValor;   
+    
+        gastosArray[editandoIndex] = {
+            nome: novoNome,
+            valor: novoValor,
+            data: novaData,
+            categoria: novaCategoria
+        };
+    
+        encerrarEdicao();
+    }
+    
+    function salvarEdicaoSaldo() {
+        const novoNome = receitaUserSelect.value === 'salario' ? 'Salário' : nomeReceitaInput.value.trim();
+        const novoValor = parseFloat(salarioInput.value);
+        const novaData = dataSaldoInput.value;
+    
+        if (!novoNome || isNaN(novoValor) || !novaData) {
+            showToast('Preencha todos os campos.', 'error');
+            return;
+        }
+    
+        const valorAntigo = saldoArray[editandoIndex].valor;
+        salario -= valorAntigo;  
+        salario += novoValor;    
+    
+        saldoArray[editandoIndex] = {
+            nome: novoNome,
+            valor: novoValor,
+            data: novaData
+        };
+    
+        encerrarEdicao();   
+    }
+
+function encerrarEdicao() {
+        editandoIndex = null;
+        editandoTipo = null;
+
+        document.getElementById('btnGasto').textContent = 'Adicionar gasto';
+        document.getElementById('btnSalario').textContent = 'Salvar receita';
+    
+        modal1.close();
+        modal2.close();
+        limparModal1();
+        limparModal2();
+    
+        atualizarUsuario();
+        renderSaldoEGastos();
+        atualizarGrafico();
+    
+        saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        gastosTotaisElement.textContent = gastosTotais.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    
+        showToast('Alteração salva com sucesso!', 'success');
+    }
