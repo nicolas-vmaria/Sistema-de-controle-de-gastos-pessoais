@@ -8,7 +8,9 @@ export function showToast(msg, type = 'success') {
     toastIcon.textContent = type === 'success' ? '✓' : '✕'
     toast.className = `toast ${type} show`
 
-    if (!toast.open) toast.showModal()
+    toast.classList.remove('show')
+    void toast.offsetWidth
+    toast.className = `toast ${type} show`
 
     clearTimeout(toastTimer)
     toastTimer = setTimeout(() => {
@@ -36,11 +38,11 @@ export function showConfirm(msg) {
 
         function onSim() { cleanup(); modal.close(); resolve(true); }
         function onNao() { cleanup(); modal.close(); resolve(false); }
-        function onCancel(e) { e.preventDefault(); cleanup(); modal.close(); resolve(false); }
+        function onCancel(e) { e.preventDefault(); cleanup(); resolve(false); }
 
-        btnSim.addEventListener('click', onSim, { once: true });
-        btnNao.addEventListener('click', onNao, { once: true });
-        modal.addEventListener('cancel', onCancel, { once: true });
+        btnSim.addEventListener('click', onSim);
+        btnNao.addEventListener('click', onNao);
+        modal.addEventListener('cancel', onCancel);
 
         modal.showModal();
     });

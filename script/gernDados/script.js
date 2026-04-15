@@ -18,12 +18,14 @@ const receitaUserSelect = document.getElementById('receita-user');
 const nomeReceitaInput = document.getElementById('nomeReceita');
 const dataSaldoInput = document.getElementById('dataSaldo');
 const ctx = document.getElementById('meuGrafico').getContext('2d');
+const buttonGrafico = document.getElementById('mostrar-grafico');
+const buttonGraficoClose = document.getElementById('fechar-grafico');
 let modal1 = document.getElementById('modal-1');
 let modal2 = document.getElementById('modal-2');
 let modal3 = document.getElementById('modal-3');
 let nivelAtual = "mes";
 let mesSelecionado = null;
-let salario = 0;    
+let salario = 0;
 let gastosTotais = 0;
 let meuGrafico = null;
 let gastosArray = [];
@@ -85,7 +87,7 @@ function init() {
             mesSelecionado = meses[meses.length - 1];
         }
         saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        gastosTotaisElement.textContent = gastosTotais.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})
+        gastosTotaisElement.textContent = gastosTotais.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
         renderSaldoEGastos();
         renderGrafico();
     } else {
@@ -287,19 +289,12 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null) {
                 </div>
 
                 <div class="action-group">
-                    <button class="edit-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
-                    <button class="delete-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
+                    <button class="edit-button open-modal" data-modal="modal-2"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
+                    <button class="delete-button" data-modal="modal-2"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
                     <span class="gasto-cat">${item.categoria}</span>
                 </div>
             `;
 
-            liElement.querySelector('.edit-button').addEventListener('click', () => {
-                alert('editar', item)
-            });
-    
-            liElement.querySelector('.delete-button').addEventListener('click', () => {
-                alert('deletar', item)
-            });
         } else {
             liElement.innerHTML = `
                 <div class="saldo-item">
@@ -309,25 +304,19 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null) {
                 </div>
 
                 <div class="action-group">
-                    <button class="edit-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
-                    <button class="delete-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
+                    <button class="edit-button open-modal" id="edit-button" data-modal="modal-1"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
+                    <button class="delete-button" id="delete-button"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
                     <span class="gasto-cat">Receita</span>
                 </div>
             `;
-
-            liElement.querySelector('.edit-button').addEventListener('click', () => {
-                alert('editar', item)
-            });
-    
-            liElement.querySelector('.delete-button').addEventListener('click', () => {
-                alert('deletar', item)
-            });
         }
 
 
         listElementTransacoes.appendChild(liElement)
     });
 }
+
+
 
 async function adicionarGastos() {
     let newGastos = parseFloat(inputGastos.value);
@@ -410,8 +399,8 @@ function mostrarFiltro() {
     if (tipoTransacao === 'gasto') {
         document.getElementById("filtro-group").style.display = "block";
         document.getElementById("filtro-data-saldo").style.display = "none";
-        if(tipoFiltro !== ""){
-           document.getElementById(`filtro-${tipoFiltro}`).style.display = "block";
+        if (tipoFiltro !== "") {
+            document.getElementById(`filtro-${tipoFiltro}`).style.display = "block";
         }
     } else if (tipoTransacao === 'saldo') {
         document.getElementById("filtro-data-saldo").style.display = "block";
@@ -506,11 +495,24 @@ function limparFiltro() {
 document.getElementById("limparFiltro").addEventListener("click", limparFiltro);
 
 
+buttonGrafico.addEventListener('click', () => {
+    document.getElementById('grafico-completo').style.display = 'block';
+    buttonGraficoClose.style.display = 'block';
+    buttonGrafico.style.display = 'none';
+})
+
+buttonGraficoClose.addEventListener('click', () => {
+    document.getElementById('grafico-completo').style.display = 'none';
+    buttonGraficoClose.style.display = 'none';
+    buttonGrafico.style.display = 'block';
+})
+
+
 
 function getMesLabel(mesKey) {
     const [ano, mes] = mesKey.split('-');
-    const nomes = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
-                   'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    const nomes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     return `${nomes[parseInt(mes) - 1]} ${ano}`;
 }
 
@@ -546,16 +548,43 @@ function agruparSaldosPorDia(mesKey) {
 function renderizarMesAtual() {
     const meses = getMesesDisponiveis();
     if (meses.length === 0) {
-        if(meuGrafico) {
+        if (meuGrafico) {
             meuGrafico.data.labels = [];
             meuGrafico.data.datasets.forEach(ds => ds.data = []);
             meuGrafico.update();
         }
+
+        document.getElementById('grafico-nav').style.display = "none";
+        document.getElementById('grafico-wrapper').style.display = "none";
+
+        if (meuGrafico) {
+            meuGrafico.options.plugins.legend.display = false;
+            meuGrafico.update();
+        }
+
+        document.getElementById('grafico-sem-dados').style.display = "block";
+
         document.getElementById('label-mes-atual').textContent = "Sem dados";
+
+        document.getElementById('gastos-totais-filtro').textContent = 'R$ 0,00';
+        document.getElementById('gastos-cat-label').textContent = 'GASTOS';
+        document.getElementById('saldo-filtro').textContent = 'R$ 0,00';
+        document.getElementById('saldo-label').textContent = 'SALDO';
+
+        mesSelecionado = null;
         return;
     }
 
-    
+    document.getElementById('grafico-nav').style.display = '';
+    document.getElementById('grafico-wrapper').style.display = '';
+    document.getElementById('grafico-sem-dados').style.display = 'none';
+
+    if (meuGrafico) {
+        meuGrafico.options.plugins.legend.display = true;
+        meuGrafico.update();
+    }
+
+
     if (mesSelecionado === null || !meses.includes(mesSelecionado)) {
         mesSelecionado = meses[meses.length - 1];
     }
@@ -563,7 +592,7 @@ function renderizarMesAtual() {
     const gastosDia = agruparGastosPorDia(mesSelecionado);
     const saldosDia = agruparSaldosPorDia(mesSelecionado);
 
-    
+
     const diasSet = new Set([...Object.keys(gastosDia), ...Object.keys(saldosDia)]);
     const dias = [...diasSet].sort();
 
@@ -577,7 +606,6 @@ function renderizarMesAtual() {
 
     document.getElementById('label-mes-atual').textContent = getMesLabel(mesSelecionado);
 
-    // Botões de navegação
     const idx = meses.indexOf(mesSelecionado);
     document.getElementById('btn-mes-anterior').disabled = idx === 0;
     document.getElementById('btn-mes-proximo').disabled = idx === meses.length - 1;
@@ -585,7 +613,41 @@ function renderizarMesAtual() {
 
 
 function renderGrafico() {
+    const pluginSemDados = {
+        id: 'semDados',
+        afterDatasetsDraw(chart) {
+            const { ctx } = chart;
+
+            chart.data.datasets.forEach((dataset, datasetIndex) => {
+                const meta = chart.getDatasetMeta(datasetIndex);
+
+                meta.data.forEach((bar, index) => {
+                    const valor = dataset.data[index];
+
+                    if (valor === 0) {
+                        ctx.save();
+                        ctx.fillStyle = '#fefdea';
+                        ctx.font = '12px Poppins';
+                        ctx.textAlign = 'center';
+
+                        const yCentro = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
+
+                        ctx.fillText(
+                            'Sem transação',
+                            bar.x,
+                            yCentro
+                        );
+
+                        ctx.restore();
+                    }
+                });
+            });
+        }
+    };
+
+
     meuGrafico = new Chart(ctx, {
+        plugins: [pluginSemDados],
         type: 'bar',
         data: {
             labels: [],
@@ -614,19 +676,23 @@ function renderGrafico() {
             onHover: (event, elements) => {
                 event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
                 const saldoElement = document.getElementById('gastos-totais-filtro');
-                
+
 
                 if (elements.length > 0) {
                     const el = elements[0];
                     const label = meuGrafico.data.labels[el.index];
                     const dsLabel = meuGrafico.data.datasets[el.datasetIndex].label;
                     const valor = meuGrafico.data.datasets[el.datasetIndex].data[el.index];
-                    const datasetIndex = el.datasetIndex
-
+                    const datasetIndex = el.datasetIndex;
                     if (datasetIndex === 1) {
                         saldoElement.classList.add('verde-destaque');
-                    } else {
+                        document.getElementById("saldo-filtro").textContent =
+                            salario.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+                        document.getElementById('saldo-label').textContent = 'SALDO';
+                    } else if (datasetIndex === 0) {
                         saldoElement.classList.remove('verde-destaque');
+                        document.getElementById("saldo-filtro").textContent = (salario + valor).toLocaleString("pt-BR", { style: 'currency', currency: 'BRL' })
+                        document.getElementById('saldo-label').textContent = `SALDO SEM ESTE GASTO`
                     }
 
                     document.getElementById("gastos-totais-filtro").textContent =
@@ -634,9 +700,7 @@ function renderGrafico() {
                     document.getElementById('gastos-cat-label').textContent =
                         `${dsLabel.toUpperCase()} — ${label.toUpperCase()}`;
 
-                    document.getElementById("saldo-filtro").textContent =
-                        salario.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-                    document.getElementById('saldo-label').textContent = 'SALDO ATUAL';
+
                 } else {
                     saldoElement.classList.remove('verde-destaque');
                     document.getElementById("gastos-totais-filtro").textContent =
@@ -649,7 +713,9 @@ function renderGrafico() {
             },
             plugins: {
                 legend: { display: true },
-                tooltip: { enabled: false },
+                tooltip: {
+                    enable: false
+                },
             },
             scales: {
                 x: {
@@ -692,3 +758,31 @@ document.getElementById('btn-mes-proximo').addEventListener('click', () => {
     }
 });
 
+listElementTransacoes.addEventListener('click', (event) => {
+    const editBtn = event.target.closest('.edit-button');
+    const deleteBtn = event.target.closest('.delete-button');
+
+    if (editBtn) {
+        console.log("Clicou em editar");
+        const modalId = editBtn.getAttribute('data-modal');
+        if (modalId) {
+            document.getElementById(modalId).showModal();
+        }
+
+        let index = gastosArray.indexOf();
+
+        editarGasto(index);
+
+
+    }
+
+    if (deleteBtn) {
+        return
+    }
+});
+
+function editarGasto(index) {
+    document.getElementById('modal-2').showModal();
+    nomeGastos.value = nomeGastos.value[0];
+    document.getElementById('btnSalario').textContent = 'Salvar alteração';
+}

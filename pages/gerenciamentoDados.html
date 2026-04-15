@@ -50,7 +50,17 @@
             </div>
         </div>
 
-        <div class="dashboard-panel">
+        <div class="button-mostrarGrafico">
+            <button id="mostrar-grafico" style="display: block;">
+                Mostrar gráfico
+            </button>
+
+            <button id="fechar-grafico" style="display:  none;">
+                Ocultar gráfico
+            </button>
+        </div>
+
+        <div class="dashboard-panel" style="display: none;" id="grafico-completo">
             <div class="cards-grid">
                 <div class="dash-card">
                     <div class="dash-card-label" id="gastos-cat-label">GASTOS</div>
@@ -62,38 +72,39 @@
                 </div>
             </div>
 
-        
+
             <!-- Navegação de mês -->
-            <div class="grafico-nav">
+            <div class="grafico-nav" id="grafico-nav">
                 <button id="btn-mes-anterior">&#8592;</button>
                 <span id="label-mes-atual">—</span>
                 <button id="btn-mes-proximo">&#8594;</button>
             </div>
-        
 
-            <div style="position: relative; width: 100%; height: 200px;">
+            <div style="position: relative; width: 100%; height: 200px;" id="grafico-wrapper">
                 <canvas id="meuGrafico"></canvas>
+            </div>
+
+            <div id="grafico-sem-dados"
+                style="display: none; text-align: center; padding: 32px 0; color: rgba(254,253,234,0.4); font-family: Poppins; font-size: 0.85rem;">
+                Sem dados para exibir. Adicione uma receita ou gasto para gerar o gráfico.
             </div>
         </div>
 
+
         <!-- Gastos -->
-
-      
-
-
         <div class="gastos-section" id="gastos-container">
 
             <div class="section-heading">Suas Transações
-            <button class="open-modal" id="filtro-button" data-modal="modal-3">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                    fill="#fefdea">
-                    <path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z" />
-                </svg></button>
+                <button class="open-modal" id="filtro-button" data-modal="modal-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#fefdea">
+                        <path d="M400-240v-80h160v80H400ZM240-440v-80h480v80H240ZM120-640v-80h720v80H120Z" />
+                    </svg></button>
             </div>
             <div id="limparFiltroDiv" style="display: none;">
                 <button class="btn-confirm" id="limparFiltro">Limpar filtro</button>
             </div>
-            <ul class="gastos-list" id="listaTransacoes">
+            <ul class="gastos-list" id="listaTransacoes"></ul>
 
         </div>
 
@@ -252,6 +263,7 @@
             <button type="button" class="btn-confirm" id="confirm-sim" style="flex: 1;">Confirmar</button>
         </div>
     </dialog>
+
 
 
 
