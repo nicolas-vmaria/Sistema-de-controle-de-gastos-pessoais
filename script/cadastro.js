@@ -23,7 +23,29 @@ telIn.addEventListener('input', (e) => {
 function cadastrar(e){
     e.preventDefault()
 
-    if (senhaIn.value !== senhaConfirmIn.value) {
+    const senha = senhaIn.value
+
+    if (senha.length < 8) {
+        showToast('A senha deve ter no mínimo 8 caracteres.', 'error')
+        return
+    }
+
+    if (!/[A-Z]/.test(senha)) {
+        showToast('A senha deve conter pelo menos uma letra maiúscula.', 'error')
+        return
+    }
+
+    if (!/[0-9]/.test(senha)) {
+        showToast('A senha deve conter pelo menos um número.', 'error')
+        return
+    }
+
+    if (!/[^a-zA-Z0-9]/.test(senha)) {
+        showToast('A senha deve conter pelo menos um caractere especial.', 'error')
+        return
+    }
+
+    if (senha !== senhaConfirmIn.value) {
         showToast('As senhas não coincidem.', 'error')
         return
     }
