@@ -23,6 +23,8 @@ const buttonGraficoClose = document.getElementById('fechar-grafico');
 let modal1 = document.getElementById('modal-1');
 let modal2 = document.getElementById('modal-2');
 let modal3 = document.getElementById('modal-3');
+let valoresGastosMes = [];
+let valoresSaldosMes = [];
 let editandoIndex = null;
 let editandoTipo = null;
 let nivelAtual = "mes";
@@ -61,18 +63,18 @@ function pegarDoStorage(chave) {
 }
 
 function atualizarUsuario() {
-    let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-
-    usuarioLogado.saldo = salario;
-    usuarioLogado.gastosTotais = gastosTotais;
-    usuarioLogado.gastosArray = gastosArray;
-    usuarioLogado.saldoArray = saldoArray;
-
+    const usuarioLogado = {
+        ...userLogado,
+        saldo: salario,
+        gastosTotais: gastosTotais,
+        gastosArray: gastosArray,
+        saldoArray: saldoArray
+    }
     salvarNoStorage('usuarioLogado', usuarioLogado);
 
     let users = pegarDoStorage('users') || [];
     let index = users.findIndex(user => user.email === usuarioLogado.email);
-    users[index] = usuarioLogado;
+    if(index === -1) users[index] = usuarioLogado;
     salvarNoStorage('users', users);
 }
 
@@ -243,6 +245,7 @@ btnSalario.addEventListener('click', async () => {
         limparModal1();
         atualizarUsuario();
         renderSaldoEGastos();
+        atualizarGrafico();
         saldo.textContent = salario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }}
 });
@@ -292,13 +295,13 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null) {
             liElement.innerHTML = `
                 <div class="gasto-left">
                     <span class="gasto-nome">${item.nome}</span>
-                    <span class="gasto-valor">- R$ ${item.valor}</span>
+                    <span class="gasto-valor">- ${Number(item.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                     <span class="gasto-meta">${dateformatada}</span>
                 </div>
 
                 <div class="action-group">
                     <button class="edit-button" data-modal="modal-2" data-index="${item.indexReal}" data-tipo="gasto"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
-                    <button class="delete-button" data-modal="modal-2"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
+                    <button class="delete-button" data-modal="modal-2" data-index="${item.indexReal}" data-tipo="gasto"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
                     <span class="gasto-cat">${item.categoria}</span>
                 </div>
             `;
@@ -307,14 +310,14 @@ function renderSaldoEGastos(filtro = "todos", arrayFiltrado = null) {
             liElement.innerHTML = `
                 <div class="saldo-item">
                     <span class="saldo-nome">${item.nome}</span>
-                    <span class="saldo-valor">+ R$ ${item.valor}</span>
+                    <span class="saldo-valor">+ ${Number(item.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                     <span class="saldo-data">${dateformatada}</span>
                 </div>
 
                 <div class="action-group">
                    <button class="edit-button" data-modal="modal-1" data-index="${item.indexReal}" data-tipo="saldo"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg></button>
 
-                    <button class="delete-button" id="delete-button" data-index="${item.indexReal} data-tipo="saldo"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
+                    <button class="delete-button" id="delete-button" data-index="${item.indexReal}" data-tipo="saldo"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fefdea"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg></button>
                     <span class="gasto-cat">Receita</span>
                 </div>
             `;
@@ -489,9 +492,6 @@ function filtroTransacoes(tipoFiltro, tipoTransacao) {
         } else if (inicio > fim) {
             showToast("A data inicial não pode ser maior que a data final.", 'error');
             return;
-        } else if (inicio === fim) {
-            showToast("A data inicial e a data final não podem ser iguais para o filtro de data.", 'error');
-            return;
         }
 
         renderSaldoEGastos("gasto", gastosArray.filter(gasto => gasto.data >= inicio && gasto.data <= fim));
@@ -539,28 +539,14 @@ function getMesesDisponiveis() {
     return [...meses].sort();
 }
 
-function agruparGastosPorDia(mesKey) {
+function agruparPorDia(array, mesKey) {
     const mapa = {};
-    gastosArray
-        .filter(g => g.data.startsWith(mesKey))
-        .forEach(g => {
-            const dia = g.data.slice(8, 10);
-            mapa[dia] = (mapa[dia] || 0) + Number(g.valor);
-        });
+    array.filter(item => item.data.startsWith(mesKey)).forEach(item => {
+        const dia = item.data.slice(8, 10);
+        mapa[dia] = (mapa[dia] || 0) + Number(item.valor);
+    });
     return mapa;
 }
-
-function agruparSaldosPorDia(mesKey) {
-    const mapa = {};
-    saldoArray
-        .filter(s => s.data.startsWith(mesKey))
-        .forEach(s => {
-            const dia = s.data.slice(8, 10);
-            mapa[dia] = (mapa[dia] || 0) + Number(s.valor);
-        });
-    return mapa;
-}
-
 function renderizarMesAtual() {
     const meses = getMesesDisponiveis();
     if (meses.length === 0) {
@@ -605,19 +591,19 @@ function renderizarMesAtual() {
         mesSelecionado = meses[meses.length - 1];
     }
 
-    const gastosDia = agruparGastosPorDia(mesSelecionado);
-    const saldosDia = agruparSaldosPorDia(mesSelecionado);
+    const gastosDia = agruparPorDia(gastosArray, mesSelecionado);
+    const saldosDia = agruparPorDia(saldoArray, mesSelecionado);
 
 
-    const diasSet = new Set([...Object.keys(gastosDia), ...Object.keys(saldosDia)]);
+    const diasSet = getDiasDoMes(mesSelecionado)
     const dias = [...diasSet].sort();
 
-    const valoresGastos = dias.map(d => gastosDia[d] || 0);
-    const valoresSaldos = dias.map(d => saldosDia[d] || 0);
+     valoresGastosMes = dias.map(d => gastosDia[d] || 0);
+     valoresSaldosMes = dias.map(d => saldosDia[d] || 0);
 
-    meuGrafico.data.labels = dias.map(d => `Dia ${d}`);
-    meuGrafico.data.datasets[0].data = valoresGastos;
-    meuGrafico.data.datasets[1].data = valoresSaldos;
+    meuGrafico.data.labels = dias.map(d => `${d}`);
+    meuGrafico.data.datasets[0].data = valoresGastosMes;
+    meuGrafico.data.datasets[1].data = valoresSaldosMes;
     meuGrafico.update();
 
     document.getElementById('label-mes-atual').textContent = getMesLabel(mesSelecionado);
@@ -625,45 +611,54 @@ function renderizarMesAtual() {
     const idx = meses.indexOf(mesSelecionado);
     document.getElementById('btn-mes-anterior').disabled = idx === 0;
     document.getElementById('btn-mes-proximo').disabled = idx === meses.length - 1;
+    atualizarCardsMes();
+}
+
+function getDiasDoMes(mesKey) {
+    const [ano, mes] = mesKey.split('-').map(Number);
+    const total = new Date(ano, mes, 0).getDate();
+    return Array.from({ length: total }, (_, i) => String(i + 1).padStart(2, '0'));
 }
 
 
 function renderGrafico() {
-    const pluginSemDados = {
-        id: 'semDados',
-        afterDatasetsDraw(chart) {
-            const { ctx } = chart;
+    // const pluginSemDados = {
+    //     id: 'semDados',
+    //     afterDatasetsDraw(chart) {
+    //         const { ctx } = chart;
 
-            chart.data.datasets.forEach((dataset, datasetIndex) => {
-                const meta = chart.getDatasetMeta(datasetIndex);
+    //         chart.data.datasets.forEach((dataset, datasetIndex) => {
+    //             const meta = chart.getDatasetMeta(datasetIndex);
 
-                meta.data.forEach((bar, index) => {
-                    const valor = dataset.data[index];
+    //             meta.data.forEach((bar, index) => {
+    //             const valor = dataset.data[index];
+    //             const outroDataset = chart.data.datasets[datasetIndex === 0 ? 1 : 0];
+    //             const outroValor = outroDataset.data[index];
 
-                    if (valor === 0) {
-                        ctx.save();
-                        ctx.fillStyle = '#fefdea';
-                        ctx.font = '12px Poppins';
-                        ctx.textAlign = 'center';
+    //                 if (valor === 0 && outroValor === 0) { {
+    //                     ctx.save();
+    //                     ctx.fillStyle = '#fefdea';
+    //                     ctx.font = '12px Poppins';
+    //                     ctx.textAlign = 'center';
 
-                        const yCentro = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
+    //                     const yCentro = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
 
-                        ctx.fillText(
-                            'Sem transação',
-                            bar.x,
-                            yCentro
-                        );
+    //                     ctx.fillText(
+    //                         '0',
+    //                         bar.x,
+    //                         yCentro
+    //                     );
 
-                        ctx.restore();
-                    }
-                });
-            });
-        }
-    };
+    //                     ctx.restore();
+    //                 }
+    //             }});
+    //         });
+    //     }
+    // };
 
 
     meuGrafico = new Chart(ctx, {
-        plugins: [pluginSemDados],
+        
         type: 'bar',
         data: {
             labels: [],
@@ -687,6 +682,10 @@ function renderGrafico() {
             ]
         },
         options: {
+            animation: {
+    duration: 400,
+    easing: 'easeInOutQuart'
+},
             responsive: true,
             maintainAspectRatio: false,
             onHover: (event, elements) => {
@@ -700,37 +699,42 @@ function renderGrafico() {
                     const dsLabel = meuGrafico.data.datasets[el.datasetIndex].label;
                     const valor = meuGrafico.data.datasets[el.datasetIndex].data[el.index];
                     const datasetIndex = el.datasetIndex;
+                    const totalSaldoMes = valoresSaldosMes.reduce((acc, val) => acc + val, 0);
+        const totalGastosMes = valoresGastosMes.reduce((acc, val) => acc + val, 0);
+        const saldoRealMes = totalSaldoMes - totalGastosMes;
+                    
+
                     if (datasetIndex === 1) {
-                        saldoElement.classList.add('verde-destaque');
-                        document.getElementById("saldo-filtro").textContent =
-                            salario.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-                        document.getElementById('saldo-label').textContent = 'SALDO';
+                                   saldoElement.classList.add('verde-destaque');
+            document.getElementById("gastos-totais-filtro").textContent =
+                valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+            document.getElementById('gastos-cat-label').textContent =
+                `${dsLabel.toUpperCase()} — DIA ${label}`;
+            document.getElementById("saldo-filtro").textContent =
+                saldoRealMes.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+            document.getElementById('saldo-label').textContent = 'SALDO';
                     } else if (datasetIndex === 0) {
-                        saldoElement.classList.remove('verde-destaque');
-                        document.getElementById("saldo-filtro").textContent = (salario + valor).toLocaleString("pt-BR", { style: 'currency', currency: 'BRL' })
-                        document.getElementById('saldo-label').textContent = `SALDO SEM ESTE GASTO`
+                         saldoElement.classList.remove('verde-destaque');
+            document.getElementById("gastos-totais-filtro").textContent =
+                valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+            document.getElementById('gastos-cat-label').textContent =
+                `${dsLabel.toUpperCase()} — DIA ${label}`;
+            document.getElementById("saldo-filtro").textContent =
+                (saldoRealMes + valor).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+            document.getElementById('saldo-label').textContent = `SALDO SEM ESTE GASTO`;
                     }
 
-                    document.getElementById("gastos-totais-filtro").textContent =
-                        valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-                    document.getElementById('gastos-cat-label').textContent =
-                        `${dsLabel.toUpperCase()} — ${label.toUpperCase()}`;
 
 
                 } else {
                     saldoElement.classList.remove('verde-destaque');
-                    document.getElementById("gastos-totais-filtro").textContent =
-                        gastosTotais.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-                    document.getElementById('gastos-cat-label').textContent = 'GASTOS';
-                    document.getElementById("saldo-label").textContent = "SALDO";
-                    document.getElementById("saldo-filtro").textContent =
-                        salario.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+            atualizarCardsMes();
                 }
             },
             plugins: {
                 legend: { display: true },
                 tooltip: {
-                    enable: false
+                    enabled: false,
                 },
             },
             scales: {
@@ -752,11 +756,38 @@ function renderGrafico() {
     renderizarMesAtual();
 }
 
+function atualizarCardsMes() {
+    const totalGastosMes = valoresGastosMes.reduce((a, b) => a + b, 0);
+    const totalSaldoMes = valoresSaldosMes.reduce((a, b) => a + b, 0);
+    const saldoRealMes = totalSaldoMes - totalGastosMes;
+
+    document.getElementById("gastos-totais-filtro").textContent =
+        totalGastosMes.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    document.getElementById('gastos-cat-label').textContent = 'GASTOS';
+
+    document.getElementById("saldo-filtro").textContent =
+       saldoRealMes.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    document.getElementById("saldo-label").textContent = "SALDO";
+}
+
+ctx.canvas.addEventListener('mouseleave', () => {
+    atualizarCardsMes();
+    document.getElementById("gastos-totais-filtro").classList.remove('verde-destaque');
+});
 function atualizarGrafico() {
+    const meses = getMesesDisponiveis();
+
+    if (meses.length > 0 && !meses.includes(mesSelecionado)) {
+        mesSelecionado = meses[meses.length - 1];
+    }
+
     renderizarMesAtual();
 }
 
 document.getElementById('btn-mes-anterior').addEventListener('click', () => {
+    
+
+        
     const meses = getMesesDisponiveis();
     const idx = meses.indexOf(mesSelecionado);
     if (idx > 0) {
@@ -774,7 +805,7 @@ document.getElementById('btn-mes-proximo').addEventListener('click', () => {
     }
 });
 
-listElementTransacoes.addEventListener('click', (event) => {
+listElementTransacoes.addEventListener('click', async (event) => {
     const editBtn = event.target.closest('.edit-button');
     const deleteBtn = event.target.closest('.delete-button');
 
@@ -796,14 +827,14 @@ listElementTransacoes.addEventListener('click', (event) => {
         const index = parseInt(deleteBtn.getAttribute('data-index'));
         const tipo = deleteBtn.getAttribute('data-tipo');
 
-        let resposta = showConfirm("Tem certeza que deseja excluir esta transação?");
+        let resposta = await showConfirm("Tem certeza que deseja excluir esta transação?");
 
         if (resposta) {
             if (tipo === 'gasto') {
                 const gastoRemovido = gastosArray.splice(index, 1)[0];
                 salario += gastoRemovido.valor;
                 gastosTotais -= gastoRemovido.valor;
-            } else {
+            } else if(tipo === "saldo") {
                 const saldoRemovido = saldoArray.splice(index, 1)[0];
                 salario -= saldoRemovido.valor;
             }
@@ -847,17 +878,28 @@ function editarGasto(item, index, tipo) {
         const novoValor = parseFloat(inputGastos.value);
         const novaData = document.getElementById('dataGastos').value;
         const novaCategoria = document.getElementById('categoriaGastos').value;
+        const dataAtual = new Date().toISOString().split('T')[0];
     
         if (!novoNome || isNaN(novoValor) || !novaData || novaCategoria === 'Selecione uma opção') {
             showToast('Preencha todos os campos.', 'error');
             return;
         }
+        if(novaData > dataAtual) {
+            showToast('A data do gasto não pode ser no futuro.', 'error');
+            return;
+        }
+
+        if(novoValor <= 0) {
+            showToast('O valor do gasto deve ser maior que zero.', 'error');
+            return;
+        }
+        
     
         const valorAntigo = gastosArray[editandoIndex].valor;
-        salario += valorAntigo;       
-        salario -= novoValor;         
-        gastosTotais -= valorAntigo;  
-        gastosTotais += novoValor;   
+        salario += valorAntigo;
+        salario -= novoValor;
+        gastosTotais -= valorAntigo;
+        gastosTotais += novoValor;
     
         gastosArray[editandoIndex] = {
             nome: novoNome,
@@ -873,9 +915,20 @@ function editarGasto(item, index, tipo) {
         const novoNome = receitaUserSelect.value === 'salario' ? 'Salário' : nomeReceitaInput.value.trim();
         const novoValor = parseFloat(salarioInput.value);
         const novaData = dataSaldoInput.value;
+        const dataAtual = new Date().toISOString().split('T')[0];
     
         if (!novoNome || isNaN(novoValor) || !novaData) {
             showToast('Preencha todos os campos.', 'error');
+            return;
+        }
+
+            if(novaData > dataAtual) {
+                showToast('A data do saldo não pode ser no futuro.', 'error');
+                return;
+            }
+
+        if(novoValor <= 0) {
+            showToast('O valor do saldo deve ser maior que zero.', 'error');
             return;
         }
     
