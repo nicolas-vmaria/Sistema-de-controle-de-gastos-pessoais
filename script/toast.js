@@ -6,7 +6,12 @@ export function showToast(msg, type = 'success') {
 
     toastMsg.textContent = msg
     toastIcon.textContent = type === 'success' ? '✓' : '✕'
-    toast.className = `toast ${type} show`
+
+    // Se for um <dialog>, garante que ele esteja no top layer acima de qualquer modal aberto
+    if (typeof toast.showModal === 'function') {
+        if (toast.open) toast.close()
+        toast.showModal()
+    }
 
     toast.classList.remove('show')
     void toast.offsetWidth
@@ -15,7 +20,7 @@ export function showToast(msg, type = 'success') {
     clearTimeout(toastTimer)
     toastTimer = setTimeout(() => {
         toast.classList.remove('show')
-        toast.close()
+        if (typeof toast.close === 'function') toast.close()
     }, 3000)
 }
 
