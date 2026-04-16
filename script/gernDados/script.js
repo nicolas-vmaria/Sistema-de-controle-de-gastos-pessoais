@@ -63,18 +63,18 @@ function pegarDoStorage(chave) {
 }
 
 function atualizarUsuario() {
-    const usuarioLogado = {
+    const usuarioAtualizado = {
         ...userLogado,
         saldo: salario,
         gastosTotais: gastosTotais,
         gastosArray: gastosArray,
         saldoArray: saldoArray
-    }
-    salvarNoStorage('usuarioLogado', usuarioLogado);
+    };
+    salvarNoStorage('usuarioLogado', usuarioAtualizado);
 
     let users = pegarDoStorage('users') || [];
-    let index = users.findIndex(user => user.email === usuarioLogado.email);
-    if(index === -1) users[index] = usuarioLogado;
+    let index = users.findIndex(user => user.email === usuarioAtualizado.email);
+    if(index !== -1) users[index] = usuarioAtualizado;
     salvarNoStorage('users', users);
 }
 
